@@ -37,8 +37,8 @@
   "devDependencies": {
     "@libsql/client": "^0.17.3",
     "@workspace/typescript-config": "workspace:*",
-    "typescript": "^5.9.3",
-    "vitest": "^4.1.2"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.6"
   },
   "peerDependencies": {
     "@libsql/client": "^0.17.0"
