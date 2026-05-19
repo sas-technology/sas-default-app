@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { writeFile } from "node:fs/promises"
 import { existsSync } from "node:fs"
 import { randomBytes } from "node:crypto"
+import { auditLog } from "@/lib/audit-log"
 
 // In Docker: write to /app/data/.env (persistent volume, sourced by entrypoint)
 // In dev: write to .env.local (Next.js reads it on startup)
@@ -24,6 +25,12 @@ export async function GET() {
 
 export async function POST(request: Request) {
   if (!isSetupAllowed()) {
+    auditLog({
+      event: "setup.attempt",
+      outcome: "denied",
+      actor: "anon",
+      detail: { reason: "locked" },
+    })
     return NextResponse.json(
       { error: "Setup is locked. Auth providers are already configured." },
       { status: 403 }
@@ -68,6 +75,13 @@ export async function POST(request: Request) {
   }
 
   await writeFile(ENV_PATH, lines.join("\n") + "\n", "utf-8")
+
+  auditLog({
+    event: "setup.complete",
+    outcome: "success",
+    actor: "anon",
+    detail: { provider: hasGoogle ? "google" : "resend" },
+  })
 
   const isDocker = existsSync("/.dockerenv")
 
