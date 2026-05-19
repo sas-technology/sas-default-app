@@ -2,6 +2,22 @@
   "name": "@workspace/eslint-config",
   "version": "0.0.0",
   "private": true,
+  "description": "Shared ESLint configurations (base, Next.js, and React internal) for the SAS default app monorepo.",
+  "keywords": [
+    "eslint",
+    "eslint-config",
+    "nextjs",
+    "react",
+    "typescript"
+  ],
+  "homepage": "https://github.com/sas-technology/sas-default-app/tree/main/packages/eslint-config#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sas-technology/sas-default-app.git",
+    "directory": "packages/eslint-config"
+  },
+  "license": "MIT",
+  "author": "Nyuchi <bryan@nyuchi.com>",
   "type": "module",
   "exports": {
     "./base": "./base.js",
