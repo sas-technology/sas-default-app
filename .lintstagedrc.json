@@ -1,5 +1,12 @@
 {
-  "*.{ts,tsx,js,mjs,cjs}": ["eslint --fix", "prettier --write", "secretlint"],
+  "*.{ts,tsx}": [
+    "eslint --fix",
+    "prettier --write",
+    "secretlint",
+    "tsc-files --noEmit",
+    "vitest related --run --reporter=dot"
+  ],
+  "*.{js,mjs,cjs}": ["eslint --fix", "prettier --write", "secretlint"],
   "*.{json,yaml,yml,css}": ["prettier --write", "secretlint"],
   "*.md": ["markdownlint-cli2 --fix", "prettier --write", "secretlint"],
   "*.{env,sh,Dockerfile,dockerfile}": ["secretlint"]
