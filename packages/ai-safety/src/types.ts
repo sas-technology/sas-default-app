@@ -1,8 +1,12 @@
+import type { RateLimitStore } from "./storage/types"
+
 export interface RateLimitConfig {
   /** Maximum requests per window */
   maxRequests: number
   /** Window size in milliseconds */
   windowMs: number
+  /** Optional pluggable storage backend (defaults to in-memory) */
+  store?: RateLimitStore
 }
 
 export interface RateLimitResult {

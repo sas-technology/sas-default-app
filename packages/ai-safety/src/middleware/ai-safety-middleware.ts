@@ -52,7 +52,7 @@ export function createAiSafetyMiddleware(
 
     // 1. Rate limiting
     if (rateLimiter) {
-      const rateResult = rateLimiter.check(request.userId)
+      const rateResult = await rateLimiter.check(request.userId)
       metadata.rateLimitRemaining = rateResult.remaining
       if (!rateResult.allowed) {
         return { success: false, error: "Rate limit exceeded", metadata }
