@@ -47,8 +47,32 @@ jobs:
       - name: Format check
         run: pnpm format:check
 
+      - name: Markdown lint
+        run: pnpm lint:md
+
+      - name: Secret scan
+        run: pnpm exec secretlint "**/*"
+
+      - name: package.json sort check
+        run: |
+          pnpm exec sort-package-json --check \
+            package.json apps/*/package.json packages/*/package.json
+
       - name: Build
         run: pnpm build
 
       - name: Test
         run: pnpm test
+
+      - name: Coverage
+        run: pnpm test:coverage
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: |
+            apps/web/coverage
+            packages/*/coverage
+          if-no-files-found: ignore
