@@ -117,6 +117,7 @@ Holds the shared `ServerManager` instance. Hides the Dock icon
 health check passes.
 
 **`ServerManager.swift`** — Manages the node process lifecycle:
+
 - `start()`: spawn `Bundled/node Bundled/standalone/apps/web/server.js` with
   env vars `DATABASE_URL=file:<data>/app.db`, `AUTH_URL=http://localhost:11000`,
   `AUTH_SECRET=<from .env>`, `SETUP_TOKEN_PATH=<data>/.setup-token`, `PORT=11000`.
@@ -126,6 +127,7 @@ health check passes.
 - Streams stdout/stderr through `Logger`.
 
 **`MenuView.swift`** — SwiftUI menu rendered from `MenuBarExtra`:
+
 - **Status indicator**: "● Server running" (green) / "● Stopped" (gray) / "● Error" (red, with reason).
 - **Open App** → `NSWorkspace.shared.open(URL("http://localhost:11000"))`.
 - **Restart Server** → `serverManager.restart()`.
@@ -136,6 +138,7 @@ health check passes.
 
 **`FirstRunSetup.swift`** — On first launch (when `~/Library/Application
 Support/SASApp/` doesn't exist):
+
 1. Create the data directory.
 2. Generate `AUTH_SECRET = openssl rand -base64 32` equivalent (Swift
    `SecRandomCopyBytes`).
@@ -149,6 +152,7 @@ Support/SASApp/` doesn't exist):
    data DB).
 
 **`LaunchAgent.swift`** — Manages `~/Library/LaunchAgents/com.sas-technology.sas-app.plist`:
+
 - `install()`: write the plist with `ProgramArguments = ["/Applications/SASApp.app/Contents/MacOS/SASApp"]`, `RunAtLoad=true`, `KeepAlive=false` (the user can quit explicitly). Then `launchctl load`.
 - `uninstall()`: `launchctl unload` + delete plist.
 - `isInstalled()`: file exists check.
@@ -218,12 +222,14 @@ The current README leads with the Docker `./start.sh` flow. After this work:
 # SAS Default App
 
 ## Install on your Mac (recommended)
+
 1. Download SASApp.dmg from Releases
 2. Drag SASApp.app to /Applications
 3. Right-click → Open the first time
 4. The menu bar icon means it's running; your browser opens automatically
 
 ## Run as a server (Docker)
+
 For production / cloud deployments. See docs/deployment/.
 ```
 

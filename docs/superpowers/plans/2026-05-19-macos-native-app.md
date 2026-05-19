@@ -70,6 +70,7 @@ README.md                                    Modified — Mac install leads, Doc
 ## Task 1: Foundation — XcodeGen project + app skeleton
 
 **Files:**
+
 - Create: `apps/mac/project.yml`
 - Create: `apps/mac/SASApp/SASAppApp.swift`
 - Create: `apps/mac/SASApp/Info.plist`
@@ -269,6 +270,7 @@ git commit -m "feat(mac): foundation — XcodeGen project, app skeleton, DataPat
 ## Task 2: ServerManager — node process lifecycle and health checks
 
 **Files:**
+
 - Create: `apps/mac/SASApp/ServerStatus.swift`
 - Create: `apps/mac/SASApp/ServerManager.swift`
 - Test: `apps/mac/SASAppTests/ServerManagerTests.swift`
@@ -465,6 +467,7 @@ git commit -m "feat(mac): ServerManager — node process lifecycle and health ch
 ## Task 3: Logger — daily-rotating log writer
 
 **Files:**
+
 - Create: `apps/mac/SASApp/Logger.swift`
 - Test: `apps/mac/SASAppTests/LoggerTests.swift`
 - Modify: `apps/mac/SASApp/ServerManager.swift` (wire logger into process pipes)
@@ -614,6 +617,7 @@ git commit -m "feat(mac): rotating log writer wired into ServerManager"
 ## Task 4: MenuView — SwiftUI menu items wired to ServerManager
 
 **Files:**
+
 - Create: `apps/mac/SASApp/MenuView.swift`
 - Modify: `apps/mac/SASApp/SASAppApp.swift`
 
@@ -738,6 +742,7 @@ git commit -m "feat(mac): SwiftUI menu wired to ServerManager"
 ## Task 5: FirstRunSetup — AUTH_SECRET, setup token modal, drizzle migration
 
 **Files:**
+
 - Create: `apps/mac/SASApp/FirstRunSetup.swift`
 - Test: `apps/mac/SASAppTests/FirstRunSetupTests.swift`
 
@@ -876,6 +881,7 @@ git commit -m "feat(mac): FirstRunSetup — AUTH_SECRET, setup token modal, env 
 ## Task 6: LaunchAgent — install/uninstall plist for auto-start on login
 
 **Files:**
+
 - Create: `apps/mac/SASApp/LaunchAgent.swift`
 - Test: `apps/mac/SASAppTests/LaunchAgentTests.swift`
 
@@ -981,6 +987,7 @@ git commit -m "feat(mac): LaunchAgent install/uninstall for auto-start on login"
 ## Task 7: Resources — menu bar icons and Node LICENSE
 
 **Files:**
+
 - Create: `apps/mac/SASApp/Resources/MenuBarIconActive.svg`
 - Create: `apps/mac/SASApp/Resources/MenuBarIconIdle.svg`
 - Create: `apps/mac/SASApp/Resources/MenuBarIconError.svg`
@@ -1026,6 +1033,7 @@ git commit -m "feat(mac): menu bar SVG icons + Node.js LICENSE"
 ## Task 8: Build scripts — bundle node + standalone, build .app, package .dmg
 
 **Files:**
+
 - Create: `apps/mac/scripts/fetch-node.sh`
 - Create: `apps/mac/scripts/build.sh`
 - Create: `apps/mac/scripts/make-dmg.sh`
@@ -1169,6 +1177,7 @@ git commit -m "feat(mac): build scripts — fetch-node, build, make-dmg"
 ## Task 9: CI workflow — build .dmg on tagged releases
 
 **Files:**
+
 - Create: `.github/workflows/mac-build.yml`
 
 - [ ] **Step 1: Create the workflow**
@@ -1233,6 +1242,7 @@ git commit -m "ci(mac): build SASApp.dmg on tagged releases"
 ## Task 10: README + docs — Mac install leads, Docker secondary
 
 **Files:**
+
 - Modify: `README.md`
 - Create: `apps/mac/README.md`
 - Modify: `docs/deployment/README.md` (add Mac app row to comparison table)
@@ -1265,7 +1275,7 @@ For production deployments on Linux servers or cloud platforms. See [`docs/deplo
 
 - [ ] **Step 2: Create `apps/mac/README.md`**
 
-```markdown
+````markdown
 # SASApp (macOS)
 
 A native menu-bar app that bundles Node.js and the Next.js server. Users install
@@ -1324,6 +1334,7 @@ xcodebuild -project SASApp.xcodeproj -scheme SASApp -destination 'platform=macOS
 ## Data location
 
 `~/Library/Application Support/SASApp/`
+
 - `app.db` — SQLite database
 - `.env` — `AUTH_SECRET` and runtime config
 - `.setup-token` — One-time setup token (consumed by `/api/setup`)
@@ -1336,19 +1347,19 @@ right-click → Open to bypass once.
 
 v2 will add Developer ID signing + Apple notarization via
 `scripts/notarize.sh` (deferred).
-```
+````
 
 - [ ] **Step 3: Modify `docs/deployment/README.md` — add a Mac app row**
 
 Find the deployment-options comparison table at the top of `docs/deployment/README.md` and add a `macOS native app` row as the first entry (above all other rows):
 
 ```markdown
-| Target            | Cost    | Setup difficulty | Auto-restart | Notes                                    |
-| ----------------- | ------- | ---------------- | ------------ | ---------------------------------------- |
-| macOS native app  | Free    | Trivial          | LaunchAgent  | **Recommended for local use.** See `apps/mac/README.md`. |
-| Docker (local)    | Free    | Easy             | Yes          | Requires Docker Desktop                  |
-| Vercel            | Free tier | Easy           | N/A          | Edge runtime                             |
-| Netlify           | Free tier | Easy           | N/A          | ...                                      |
+| Target           | Cost      | Setup difficulty | Auto-restart | Notes                                                    |
+| ---------------- | --------- | ---------------- | ------------ | -------------------------------------------------------- |
+| macOS native app | Free      | Trivial          | LaunchAgent  | **Recommended for local use.** See `apps/mac/README.md`. |
+| Docker (local)   | Free      | Easy             | Yes          | Requires Docker Desktop                                  |
+| Vercel           | Free tier | Easy             | N/A          | Edge runtime                                             |
+| Netlify          | Free tier | Easy             | N/A          | ...                                                      |
 ```
 
 (Preserve the existing rows below — only adding the macOS row.)
@@ -1367,9 +1378,11 @@ git commit -m "docs(mac): README leads with Mac install, Docker secondary"
 After Tasks 1–10 are all merged together (likely on a `feat/macos-app` branch):
 
 - [ ] **Build the .dmg end-to-end on the maintainer's Mac:**
+
   ```bash
   ./apps/mac/scripts/build.sh
   ```
+
   Expected: produces `apps/mac/dist/SASApp-YYYY.MM.DD.dmg` (~80 MB).
 
 - [ ] **Manual smoke test:**
