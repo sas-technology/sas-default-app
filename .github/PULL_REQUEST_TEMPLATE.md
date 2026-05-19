@@ -1,20 +1,28 @@
-## What
+## Summary
 
-<!-- Brief description of the change -->
+<!-- 1-3 bullets: what changed and why -->
 
-## Why
+## Linked issues / tickets
 
-<!-- Why is this change needed? Link to issue if applicable -->
+Closes #
 
-## How to Test
+## Test plan
 
-<!-- Steps to verify the change works correctly -->
+- [ ] `pnpm test` passes
+- [ ] `pnpm typecheck` passes
+- [ ] `pnpm lint` passes
+- [ ] `pnpm format:check` passes
+- [ ] Tested the golden path manually (if UI change)
+- [ ] Edge cases considered
 
 ## Checklist
 
-- [ ] Build passes (`pnpm build`)
-- [ ] Tests pass (`pnpm test`)
-- [ ] Lint passes (`pnpm lint`)
-- [ ] Types check (`pnpm typecheck`)
-- [ ] Documentation updated (if applicable)
+- [ ] Commit messages follow conventional commits (`feat:`, `fix:`, `chore:`, `docs:`, `test:`)
+- [ ] No `any` types introduced
+- [ ] No secrets or credentials in the diff
 - [ ] Accessibility considered (APCA AAA 3.0 contrast, keyboard navigation)
+- [ ] `docs/` updated if this changes public behaviour
+
+## For AI agent contributors
+
+If you are an AI coding agent, read `AGENTS.md` before opening this PR.
