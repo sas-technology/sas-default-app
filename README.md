@@ -6,7 +6,7 @@
 
 This is a self-hosted starter app with sign-in, AI safety guardrails, and accessibility built in. It's designed for schools, small teams, and evaluators who want a working app they can run on their own machine — not a service to sign up for, and not a half-finished example. Install it, open a browser, and it works.
 
-Out of the box you get a sign-in screen, a protected dashboard, AI safety guardrails for any AI features you add, a dark mode, and a local SQLite database — all running inside Docker on your own computer. No cloud account required, no data leaving your machine.
+Out of the box you get a sign-in screen, a protected dashboard, AI safety guardrails for any AI features you add, a dark mode, and a local SQLite database — all running natively on your own computer as a Mac app. No cloud account required, no data leaving your machine. (For servers and cloud platforms, the same app also runs in Docker.)
 
 Full breakdown of features, what it isn't, and the audit-relevant facts: [docs/overview.md](docs/overview.md).
 
@@ -75,18 +75,19 @@ Enter your credentials in the wizard, click **Save and start**, and the app rest
 
 - **Auth** — Google sign-in and email one-time codes
 - **Accessibility** — APCA AAA 3.0 contrast, keyboard navigation, screen reader support
-- **Database** — SQLite, lives inside the container
+- **Database** — SQLite at `~/Library/Application Support/SASApp/app.db` on Mac, or `/app/data/app.db` inside Docker
 - **Dark mode** — press `d` to toggle
 - **Audit log** — every security-sensitive action is logged as JSON to stdout
-- **Active monitoring** — `/api/health` endpoint, Docker `HEALTHCHECK`, and security response headers
+- **Active monitoring** — `/api/health` endpoint, security response headers, and Docker `HEALTHCHECK` when containerized
 
 ---
 
 ## Deploy somewhere else
 
-Docker on your own machine is the default, but the same app runs in other places too.
+The Mac app is the default for local use, but the same app runs in other places too.
 
-- **Local Docker** — what the quick-start above does. Best for try-it-out and self-hosting.
+- **Mac app** — what the install above gives you. Best for individual teachers, evaluators, and small classrooms.
+- **Docker** — for self-hosting on a Linux server. See [`docs/deployment/`](docs/deployment/).
 - **Vercel** — [docs/deployment/vercel.md](docs/deployment/vercel.md)
 - **Netlify** — [docs/deployment/netlify.md](docs/deployment/netlify.md)
 - **Cloudflare Workers** — [docs/deployment/cloudflare.md](docs/deployment/cloudflare.md)
@@ -97,22 +98,41 @@ Docker on your own machine is the default, but the same app runs in other places
 
 ## Everyday commands
 
-| What                      | Command                  |
-| ------------------------- | ------------------------ |
-| Start the app (Docker)    | `./start.sh`             |
-| Stop the app              | `docker compose down`    |
-| View logs                 | `docker compose logs`    |
-| Start fresh (wipe data)   | `docker compose down -v` |
-| Start dev server (coding) | `pnpm dev`               |
-| Run tests                 | `pnpm test`              |
-| Check for errors          | `pnpm typecheck`         |
+### Mac app
+
+| What           | How                                                                             |
+| -------------- | ------------------------------------------------------------------------------- |
+| Start the app  | Open `SASApp.app` (auto-starts if Launch at Login is on)                        |
+| Stop the app   | Menu bar icon → **Quit**                                                        |
+| Restart server | Menu bar icon → **Restart Server**                                              |
+| View logs      | Menu bar icon → **View Logs** (or `~/Library/Application Support/SASApp/logs/`) |
+| Start fresh    | Quit, then delete `~/Library/Application Support/SASApp/`                       |
+
+### Docker (server use)
+
+| What                    | Command                  |
+| ----------------------- | ------------------------ |
+| Start the app           | `./start.sh`             |
+| Stop the app            | `docker compose down`    |
+| View logs               | `docker compose logs`    |
+| Start fresh (wipe data) | `docker compose down -v` |
+
+### Development
+
+| What             | Command          |
+| ---------------- | ---------------- |
+| Start dev server | `pnpm dev`       |
+| Run tests        | `pnpm test`      |
+| Check for errors | `pnpm typecheck` |
 
 ---
 
 ## Need help?
 
-- **Something broken?** Run `docker compose logs` to see what happened
-- **Want to start over?** Run `docker compose down -v && ./start.sh`
+- **Something broken on the Mac app?** Click the menu bar icon → **View Logs** to see what happened
+- **Something broken in Docker?** Run `docker compose logs` to see what happened
+- **Want to start over on the Mac?** Quit the app, then delete `~/Library/Application Support/SASApp/`
+- **Want to start over in Docker?** Run `docker compose down -v && ./start.sh`
 - **Found a bug?** [Open an issue](https://github.com/sas-technology/sas-default-app/issues)
 
 ---
