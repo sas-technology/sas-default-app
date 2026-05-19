@@ -27,6 +27,7 @@ interface ProviderMap {
 function OnboardingDialog() {
   const [tab, setTab] = useState<"google" | "email" | "both">("google")
   const [saving, setSaving] = useState(false)
+  const [authUrl, setAuthUrl] = useState("http://localhost:11000")
   const [result, setResult] = useState<{
     success: boolean
     message: string
@@ -34,10 +35,24 @@ function OnboardingDialog() {
   } | null>(null)
 
   // Form fields
+  const [setupToken, setSetupToken] = useState("")
   const [googleClientId, setGoogleClientId] = useState("")
   const [googleClientSecret, setGoogleClientSecret] = useState("")
   const [resendApiKey, setResendApiKey] = useState("")
   const [emailFrom, setEmailFrom] = useState("")
+
+  useEffect(() => {
+    fetch("/api/setup")
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data?.authUrl === "string") {
+          setAuthUrl(data.authUrl)
+        }
+      })
+      .catch(() => {
+        // keep default
+      })
+  }, [])
 
   async function handleSave() {
     setSaving(true)
@@ -56,7 +71,10 @@ function OnboardingDialog() {
     try {
       const res = await fetch("/api/setup", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-setup-token": setupToken,
+        },
         body: JSON.stringify(payload),
       })
       const data = await res.json()
@@ -94,10 +112,11 @@ function OnboardingDialog() {
     setSaving(false)
   }
 
-  const canSubmit =
+  const providerFilled =
     (tab === "google" && googleClientId && googleClientSecret) ||
     (tab === "email" && resendApiKey) ||
     (tab === "both" && googleClientId && googleClientSecret && resendApiKey)
+  const canSubmit = !!setupToken && !!providerFilled
 
   return (
     <Dialog defaultOpen>
@@ -112,6 +131,23 @@ function OnboardingDialog() {
             one-time setup — your keys are saved locally inside the container.
           </DialogDescription>
         </DialogHeader>
+
+        {/* Setup token (printed in the container logs at boot) */}
+        <div className="space-y-2 pt-2">
+          <Label htmlFor="setup-token">Setup token</Label>
+          <Input
+            id="setup-token"
+            type="text"
+            autoComplete="off"
+            placeholder="Paste the token from the container logs"
+            value={setupToken}
+            onChange={(e) => setSetupToken(e.target.value)}
+          />
+          <p className="text-xs text-muted-foreground">
+            One-time token printed in the container logs at startup. Required to
+            authorize this initial setup.
+          </p>
+        </div>
 
         {/* Provider selector */}
         <div className="flex gap-2 pt-2">
@@ -140,7 +176,7 @@ function OnboardingDialog() {
                 From Google Cloud Console &rarr; APIs &amp; Services &rarr;
                 Credentials. Set redirect URI to{" "}
                 <code className="rounded bg-muted px-1 py-0.5">
-                  http://localhost:11000/api/auth/callback/google
+                  {authUrl}/api/auth/callback/google
                 </code>
               </p>
               <div className="space-y-2">
