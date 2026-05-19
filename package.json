@@ -11,10 +11,12 @@
     "lint:md": "markdownlint-cli2 \"**/*.md\" \"!**/node_modules\" \"!**/.next\" \"!**/.turbo\" \"!CHANGELOG.md\"",
     "prepare": "husky",
     "test": "turbo test",
+    "test:coverage": "turbo test -- --coverage",
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
     "@secretlint/secretlint-rule-preset-recommend": "^13.0.2",
+    "@vitest/coverage-v8": "^4.1.6",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "husky": "^9.1.7",
