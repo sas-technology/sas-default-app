@@ -1,8 +1,12 @@
+import type { RateLimitStore } from "./storage/types"
+
 export interface RateLimitConfig {
   /** Maximum requests per window */
   maxRequests: number
   /** Window size in milliseconds */
   windowMs: number
+  /** Optional pluggable storage backend (defaults to in-memory) */
+  store?: RateLimitStore
 }
 
 export interface RateLimitResult {
@@ -36,11 +40,15 @@ export interface OutputFilterResult {
   redactedCount: number
 }
 
+import type { TokenBudgetStore } from "./storage/types"
+
 export interface TokenBudgetConfig {
   /** Maximum tokens per request */
   maxTokensPerRequest: number
   /** Maximum tokens per user per hour */
   maxTokensPerUserPerHour: number
+  /** Optional persistent store; defaults to an in-memory implementation */
+  store?: TokenBudgetStore
 }
 
 export interface TokenBudgetResult {
