@@ -13,7 +13,7 @@ interface AiRequest {
 
 interface AiResponse {
   output: string
-  tokensUsed?: number
+  tokensUsed: number
 }
 
 type AiHandler = (input: string) => Promise<AiResponse>
@@ -87,7 +87,7 @@ export function createAiSafetyMiddleware(
 
     // 4. Token budget check
     if (tokenBudget) {
-      const budgetResult = tokenBudget.check(
+      const budgetResult = await tokenBudget.check(
         request.userId,
         sanitizeResult.sanitized
       )
@@ -99,10 +99,16 @@ export function createAiSafetyMiddleware(
     // 5. Call the AI handler
     const response = await handler(sanitizeResult.sanitized)
 
-    // 6. Record token usage
-    if (tokenBudget && response.tokensUsed) {
-      tokenBudget.record(request.userId, response.tokensUsed)
-      metadata.tokensUsed = response.tokensUsed
+    // 6. Record token usage. Handler is required to return tokensUsed; fall
+    //    back to an estimate if a caller bypassed the type check.
+    if (tokenBudget) {
+      const tokens =
+        typeof response.tokensUsed === "number" && response.tokensUsed > 0
+          ? response.tokensUsed
+          : tokenBudget.estimateTokens(sanitizeResult.sanitized) +
+            tokenBudget.estimateTokens(response.output)
+      await tokenBudget.record(request.userId, tokens)
+      metadata.tokensUsed = tokens
     }
 
     // 7. Filter output

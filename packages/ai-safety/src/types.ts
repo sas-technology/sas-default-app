@@ -36,11 +36,15 @@ export interface OutputFilterResult {
   redactedCount: number
 }
 
+import type { TokenBudgetStore } from "./storage/types"
+
 export interface TokenBudgetConfig {
   /** Maximum tokens per request */
   maxTokensPerRequest: number
   /** Maximum tokens per user per hour */
   maxTokensPerUserPerHour: number
+  /** Optional persistent store; defaults to an in-memory implementation */
+  store?: TokenBudgetStore
 }
 
 export interface TokenBudgetResult {
