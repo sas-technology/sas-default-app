@@ -75,3 +75,18 @@ const result = validateContrast("#333333", "#ffffff", "bodyText")
 - Configure appropriate rate limits per route
 - Review PII redaction settings for your use case
 - Content safety patterns are a baseline - add external moderation APIs for production
+
+## Adding UI Components
+
+Install shadcn/ui components into the shared `@workspace/ui` package:
+
+```bash
+npx shadcn@latest add card
+npx shadcn@latest add form
+```
+
+Then import them from the shared package:
+
+```tsx
+import { Card } from "@workspace/ui/components/card"
+```
