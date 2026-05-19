@@ -23,7 +23,7 @@
 ├── packages/
 │   ├── ui/                           # Shared component library
 │   ├── ai-safety/                    # AI guardrails and moderation
-│   ├── accessibility/                # APCA contrast, a11y utilities
+│   ├── accessibility/                # APCA AAA 3.0 contrast, a11y utilities
 │   ├── eslint-config/                # Shared ESLint configs
 │   └── typescript-config/            # Shared TS configs
 ├── turbo.json                        # Turborepo pipeline config
@@ -77,6 +77,8 @@ Response ← PII Redaction ← Output Filter ← [AI API Call]
 ```
 
 Each step is independently configurable. Use `createAiSafetyMiddleware()` to compose the pipeline.
+
+See [docs/ai-safety.md](./ai-safety.md) for the canonical reference: every guardrail, what it protects against, how to configure it, and where its limits lie.
 
 ## Provider Composition
 
@@ -159,3 +161,14 @@ Providers register conditionally based on env vars:
 - Neither → Onboarding modal shown at `/login`
 
 The setup API (`/api/setup`) is locked once any provider is configured.
+
+## Accessibility
+
+The MiniApp Template targets **APCA AAA 3.0** contrast (not legacy WCAG 2.x ratios). See [Coding Conventions](./coding-conventions.md#apca-aaa-30-contrast) for the per-use-case Lc thresholds and the `validateContrast` helper.
+
+## See also
+
+- [Getting Started](./getting-started.md) — local development setup
+- [Coding Conventions](./coding-conventions.md) — file naming, TypeScript rules, contrast thresholds
+- [AI Safety Guardrails](./ai-safety.md) — canonical reference for `@workspace/ai-safety`
+- [Project Overview](./overview.md) — what the template is and who it's for

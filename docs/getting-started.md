@@ -1,5 +1,9 @@
 # Getting Started
 
+This guide covers local development of the MiniApp Template without Docker. If
+you only want to run the app, see the [README](../README.md) — it walks through
+the Docker-based one-command setup at `http://localhost:11000`.
+
 ## Prerequisites
 
 - **Node.js 22+** - Use [nvm](https://github.com/nvm-sh/nvm) and run `nvm install` in the project root
@@ -27,8 +31,13 @@ Edit `apps/web/.env.local`:
 
 ```env
 AUTH_SECRET=<generate with: openssl rand -base64 32>
-AUTH_URL=http://localhost:3000
+AUTH_URL=http://localhost:11000
+DATABASE_URL=file:./dev.db
 ```
+
+The MiniApp Template uses SQLite (via libSQL/Drizzle). For local development
+the database lives at `apps/web/dev.db`; inside the Docker container it lives
+at `/app/data/app.db` on a persistent volume.
 
 ### Start Development
 
@@ -36,13 +45,13 @@ AUTH_URL=http://localhost:3000
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:11000](http://localhost:11000).
 
 ## Renaming the Project
 
 Update the `name` field in these files:
 
-1. `package.json` (root) - change `next-template` to your project name
+1. `package.json` (root) - change the package name to your project name
 2. `apps/web/package.json` - change `web` to your app name
 3. `apps/web/lib/constants.ts` - update `APP_NAME` and `APP_DESCRIPTION`
 
@@ -131,3 +140,10 @@ export default async function YourPage() {
 ```
 
 Pages inside `(dashboard)/` automatically require sign-in.
+
+## See also
+
+- [Architecture](./architecture.md) — monorepo layout, auth flow, error boundary hierarchy
+- [Coding Conventions](./coding-conventions.md) — file naming, server/client components, TypeScript rules
+- [AI Safety Guardrails](./ai-safety.md) — rate limiting, prompt-injection defenses, PII redaction
+- [Project Overview](./overview.md) — what the template is and who it's for

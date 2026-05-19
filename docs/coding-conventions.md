@@ -90,3 +90,12 @@ Then import them from the shared package:
 ```tsx
 import { Card } from "@workspace/ui/components/card"
 ```
+
+See [docs/ai-safety.md](./ai-safety.md) for the full reference: each guardrail's defaults, configuration, and known limitations.
+
+## See also
+
+- [Getting Started](./getting-started.md) — local development setup
+- [Architecture](./architecture.md) — monorepo layout and auth flow
+- [AI Safety Guardrails](./ai-safety.md) — canonical reference for `@workspace/ai-safety`
+- [Project Overview](./overview.md) — what the template is and who it's for
