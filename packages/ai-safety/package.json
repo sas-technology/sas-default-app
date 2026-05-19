@@ -2,6 +2,23 @@
   "name": "@workspace/ai-safety",
   "version": "0.0.0",
   "private": true,
+  "description": "AI safety guardrails including rate limiting, input sanitization, output filtering, PII redaction, and content moderation.",
+  "keywords": [
+    "ai-safety",
+    "prompt-injection",
+    "rate-limit",
+    "pii-redaction",
+    "guardrails",
+    "moderation"
+  ],
+  "homepage": "https://github.com/sas-technology/sas-default-app/tree/main/packages/ai-safety#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sas-technology/sas-default-app.git",
+    "directory": "packages/ai-safety"
+  },
+  "license": "MIT",
+  "author": "Nyuchi <bryan@nyuchi.com>",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",

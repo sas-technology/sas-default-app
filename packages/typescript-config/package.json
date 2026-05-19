@@ -2,7 +2,21 @@
   "name": "@workspace/typescript-config",
   "version": "0.0.0",
   "private": true,
-  "license": "PROPRIETARY",
+  "description": "Shared TypeScript configurations (base, Next.js, and React library) for the SAS default app monorepo.",
+  "keywords": [
+    "typescript",
+    "tsconfig",
+    "nextjs",
+    "react"
+  ],
+  "homepage": "https://github.com/sas-technology/sas-default-app/tree/main/packages/typescript-config#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sas-technology/sas-default-app.git",
+    "directory": "packages/typescript-config"
+  },
+  "license": "MIT",
+  "author": "Nyuchi <bryan@nyuchi.com>",
   "publishConfig": {
     "access": "public"
   }

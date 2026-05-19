@@ -2,6 +2,22 @@
   "name": "sas-default-app",
   "version": "0.0.1",
   "private": true,
+  "description": "Production-ready Next.js monorepo template with authentication, AI safety guardrails, APCA AAA accessibility, and comprehensive tooling.",
+  "keywords": [
+    "nextjs",
+    "monorepo",
+    "ai-safety",
+    "accessibility",
+    "template",
+    "turborepo"
+  ],
+  "homepage": "https://github.com/sas-technology/sas-default-app#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sas-technology/sas-default-app.git"
+  },
+  "license": "MIT",
+  "author": "Nyuchi <bryan@nyuchi.com>",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",

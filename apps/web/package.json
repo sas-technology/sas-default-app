@@ -2,6 +2,22 @@
   "name": "sas-default-app-web",
   "version": "0.0.1",
   "private": true,
+  "description": "Next.js 16 web application for the SAS default app template, including auth, dashboard, and protected routes.",
+  "keywords": [
+    "nextjs",
+    "react",
+    "app-router",
+    "next-auth",
+    "tailwind"
+  ],
+  "homepage": "https://github.com/sas-technology/sas-default-app/tree/main/apps/web#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sas-technology/sas-default-app.git",
+    "directory": "apps/web"
+  },
+  "license": "MIT",
+  "author": "Nyuchi <bryan@nyuchi.com>",
   "type": "module",
   "scripts": {
     "build": "next build",
