@@ -30,6 +30,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Verify lockfile is up to date
+        run: |
+          pnpm install --frozen-lockfile --lockfile-only
+          if ! git diff --exit-code pnpm-lock.yaml; then
+            echo "::error::pnpm-lock.yaml is out of date — run 'pnpm install' locally"
+            exit 1
+          fi
+
       - name: Typecheck
         run: pnpm typecheck
 

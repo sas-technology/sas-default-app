@@ -9,5 +9,6 @@
   "*.{js,mjs,cjs}": ["eslint --fix", "prettier --write", "secretlint"],
   "*.{json,yaml,yml,css}": ["prettier --write", "secretlint"],
   "*.md": ["markdownlint-cli2 --fix", "prettier --write", "secretlint"],
-  "*.{env,sh,Dockerfile,dockerfile}": ["secretlint"]
+  "*.{env,sh,Dockerfile,dockerfile}": ["secretlint"],
+  "package.json": ["sort-package-json", "prettier --write"]
 }

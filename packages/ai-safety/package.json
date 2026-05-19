@@ -1,12 +1,18 @@
 {
   "name": "@workspace/ai-safety",
   "version": "0.0.0",
-  "type": "module",
   "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./guardrails": "./src/guardrails/index.ts",
+    "./moderation": "./src/moderation/index.ts",
+    "./middleware": "./src/middleware/index.ts"
+  },
   "scripts": {
-    "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "react": "^19.2.4"
@@ -15,11 +21,5 @@
     "@workspace/typescript-config": "workspace:*",
     "typescript": "^5.9.3",
     "vitest": "^4.1.2"
-  },
-  "exports": {
-    ".": "./src/index.ts",
-    "./guardrails": "./src/guardrails/index.ts",
-    "./moderation": "./src/moderation/index.ts",
-    "./middleware": "./src/middleware/index.ts"
   }
 }
