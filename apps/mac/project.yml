@@ -1,0 +1,38 @@
+name: SASApp
+options:
+  deploymentTarget:
+    macOS: "13.0"
+  bundleIdPrefix: com.sas-technology
+settings:
+  base:
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_IDENTITY: "-"
+    PRODUCT_BUNDLE_IDENTIFIER: com.sas-technology.sas-app
+    SWIFT_VERSION: "5.10"
+    MACOSX_DEPLOYMENT_TARGET: "13.0"
+targets:
+  SASApp:
+    type: application
+    platform: macOS
+    sources:
+      - path: SASApp
+        excludes: ["Bundled/**"]
+    resources:
+      - path: SASApp/Resources
+      - path: SASApp/Bundled
+        optional: true
+    info:
+      path: SASApp/Info.plist
+    entitlements:
+      path: SASApp/SASApp.entitlements
+    settings:
+      base:
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_STYLE: Manual
+  SASAppTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: SASAppTests
+    dependencies:
+      - target: SASApp
