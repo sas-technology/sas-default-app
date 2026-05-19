@@ -58,4 +58,7 @@ ENV DATABASE_URL=file:/app/data/app.db
 
 EXPOSE 11000
 
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD wget -qO- http://localhost:11000/api/health >/dev/null 2>&1 || exit 1
+
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
