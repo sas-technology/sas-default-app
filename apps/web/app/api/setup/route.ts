@@ -20,7 +20,10 @@ function isSetupAllowed(): boolean {
 }
 
 export async function GET() {
-  return NextResponse.json({ setupAllowed: isSetupAllowed() })
+  return NextResponse.json({
+    setupAllowed: isSetupAllowed(),
+    authUrl: process.env.AUTH_URL ?? "http://localhost:11000",
+  })
 }
 
 export async function POST(request: Request) {

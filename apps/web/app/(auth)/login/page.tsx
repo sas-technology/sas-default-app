@@ -27,6 +27,7 @@ interface ProviderMap {
 function OnboardingDialog() {
   const [tab, setTab] = useState<"google" | "email" | "both">("google")
   const [saving, setSaving] = useState(false)
+  const [authUrl, setAuthUrl] = useState("http://localhost:11000")
   const [result, setResult] = useState<{
     success: boolean
     message: string
@@ -38,6 +39,19 @@ function OnboardingDialog() {
   const [googleClientSecret, setGoogleClientSecret] = useState("")
   const [resendApiKey, setResendApiKey] = useState("")
   const [emailFrom, setEmailFrom] = useState("")
+
+  useEffect(() => {
+    fetch("/api/setup")
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data?.authUrl === "string") {
+          setAuthUrl(data.authUrl)
+        }
+      })
+      .catch(() => {
+        // keep default
+      })
+  }, [])
 
   async function handleSave() {
     setSaving(true)
@@ -140,7 +154,7 @@ function OnboardingDialog() {
                 From Google Cloud Console &rarr; APIs &amp; Services &rarr;
                 Credentials. Set redirect URI to{" "}
                 <code className="rounded bg-muted px-1 py-0.5">
-                  http://localhost:11000/api/auth/callback/google
+                  {authUrl}/api/auth/callback/google
                 </code>
               </p>
               <div className="space-y-2">
