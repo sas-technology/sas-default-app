@@ -2,7 +2,7 @@
 
 ## Monorepo Structure
 
-```
+```text
 .
 ├── apps/
 │   └── web/                          # Next.js application
@@ -32,7 +32,7 @@
 
 ## Workspace Dependencies
 
-```
+```text
 apps/web
 ├── @workspace/ui              (components, styles)
 ├── @workspace/ai-safety       (guardrails for AI routes)
@@ -70,7 +70,7 @@ Tasks defined in `turbo.json` enable parallel builds with caching:
 
 ## AI Safety Middleware Pipeline
 
-```
+```text
 Request → Rate Limit → Sanitize Input → Content Safety Check
                                                 ↓
 Response ← PII Redaction ← Output Filter ← [AI API Call]

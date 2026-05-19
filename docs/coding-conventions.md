@@ -42,12 +42,12 @@
 
 Use the `@workspace/accessibility/apca` module to validate color pairs:
 
-| Use Case                        | Minimum | Lc  |     |
-| ------------------------------- | ------- | --- | --- |
-| Body text (14-16px)             | 90      |
-| Large text (24px+ / 18px+ bold) | 75      |
-| Non-text (icons, borders)       | 60      |
-| Placeholder/disabled text       | 45      |
+| Use Case                        | Minimum Lc |
+| ------------------------------- | ---------- |
+| Body text (14-16px)             | 90         |
+| Large text (24px+ / 18px+ bold) | 75         |
+| Non-text (icons, borders)       | 60         |
+| Placeholder/disabled text       | 45         |
 
 ```typescript
 import { validateContrast } from "@workspace/accessibility/apca"

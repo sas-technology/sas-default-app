@@ -15,6 +15,7 @@
 ## File map
 
 **Phase 1 (Docker bootstrap):**
+
 - Modify: `docker-entrypoint.sh` (run migrations, generate temp `AUTH_SECRET`)
 - Modify: `docker-compose.yml` (document expected env)
 - Modify: `apps/web/app/api/setup/route.ts` (one-time setup token gate)
@@ -23,6 +24,7 @@
 - Test: `apps/web/__tests__/setup-token.test.ts`
 
 **Phase 2 (Persistent guardrail state):**
+
 - Create: `packages/ai-safety/src/storage/types.ts` (store interfaces)
 - Create: `packages/ai-safety/src/storage/memory-stores.ts` (default in-memory impls)
 - Create: `packages/ai-safety/src/storage/libsql-stores.ts` (SQLite-backed impls)
@@ -38,6 +40,7 @@
 - Create: `apps/web/lib/ai-safety.ts` (factory wiring libsql stores into middleware)
 
 **Phase 3 (Safety hardening):**
+
 - Modify: `packages/ai-safety/src/guardrails/input-sanitizer.ts` (strip zero-width / control chars)
 - Modify: `packages/ai-safety/src/__tests__/input-sanitizer.test.ts` (homoglyph + zero-width tests)
 - Modify: `packages/ai-safety/src/moderation/content-safety.ts` (compute `confidence` from match count)
@@ -46,9 +49,11 @@
 - Create: `packages/ai-safety/src/__tests__/ai-safety-middleware.test.ts`
 
 **Phase 4 (OAuth UX fix):**
+
 - Modify: `apps/web/app/(auth)/login/page.tsx` (dynamic redirect URI hint from `AUTH_URL`)
 
 **Phase 0 (Quality + active safety infrastructure):**
+
 - Create: `.markdownlint-cli2.jsonc` (markdown lint config)
 - Modify: `package.json` (add `markdownlint-cli2`, `secretlint`, `tsc-files`, `sort-package-json` devDeps + scripts)
 - Modify: `package.json` lint-staged config (add markdown lint, secret scan, type-check, related tests, package.json sort)
@@ -64,6 +69,7 @@
 - Modify: `.github/workflows/ci.yml` (add markdown lint, secret scan, audit, sort-package-json check, coverage upload)
 
 **Phase 5 (Documentation):**
+
 - Create: `docs/ai-safety.md`
 - Create: `docs/overview.md` (what the app is, what it does, audit-worthy facts)
 - Rewrite: `README.md` (links to both)
@@ -73,15 +79,16 @@
 
 ---
 
-# Phase 0 — Quality and active safety infrastructure
+## Phase 0 — Quality and active safety infrastructure
 
-Phase 0 hardens the loop before we touch product code. Pre-commit prevention catches mistakes locally; CI gates catch what slips past; runtime checks (headers, health, audit log, scheduled vulnerability audits) are the *active* layer that keeps the app safe in production. Together they make every change in Phases 1–5 safer to ship.
+Phase 0 hardens the loop before we touch product code. Pre-commit prevention catches mistakes locally; CI gates catch what slips past; runtime checks (headers, health, audit log, scheduled vulnerability audits) are the _active_ layer that keeps the app safe in production. Together they make every change in Phases 1–5 safer to ship.
 
-## Task 0.1: Markdown linting with markdownlint-cli2
+### Task 0.1: Markdown linting with markdownlint-cli2
 
 **Why:** Docs are now a primary deliverable. We need automated checks on heading hierarchy, link validity, and code-fence languages so the README, `docs/ai-safety.md`, and `docs/overview.md` stay consistent.
 
 **Files:**
+
 - Create: `.markdownlint-cli2.jsonc`
 - Modify: `package.json` (add `markdownlint-cli2` devDep + `lint:md` script + lint-staged hook)
 
@@ -112,12 +119,18 @@ Create `.markdownlint-cli2.jsonc`:
 {
   "config": {
     "default": true,
-    "MD013": false,         // line length (prose wraps freely)
-    "MD033": false,         // allow inline HTML (e.g. <details>)
-    "MD041": false,         // first line need not be h1 (allows frontmatter)
-    "MD024": { "siblings_only": true }
+    "MD013": false, // line length (prose wraps freely)
+    "MD033": false, // allow inline HTML (e.g. <details>)
+    "MD041": false, // first line need not be h1 (allows frontmatter)
+    "MD024": { "siblings_only": true },
   },
-  "ignores": ["node_modules", ".next", ".turbo", "CHANGELOG.md", "pnpm-lock.yaml"]
+  "ignores": [
+    "node_modules",
+    ".next",
+    ".turbo",
+    "CHANGELOG.md",
+    "pnpm-lock.yaml",
+  ],
 }
 ```
 
@@ -148,11 +161,12 @@ git commit -m "chore(quality): add markdownlint-cli2 with lint-staged + script"
 
 ---
 
-## Task 0.2: Secret scanning on pre-commit via secretlint
+### Task 0.2: Secret scanning on pre-commit via secretlint
 
 **Why:** Active prevention against committed API keys / tokens. Especially important for a template aimed at non-technical operators who may have `.env` files lying around.
 
 **Files:**
+
 - Create: `.secretlintrc.json`
 - Modify: `package.json` (add `secretlint` devDeps + lint-staged hook)
 
@@ -197,11 +211,12 @@ git commit -m "chore(quality): scan staged files for secrets via secretlint"
 
 ---
 
-## Task 0.3: Type-check changed files + related tests on pre-commit
+### Task 0.3: Type-check changed files + related tests on pre-commit
 
 **Why:** Currently lint-staged only formats and lints. Type errors and broken tests are caught at CI, after the commit. Adding fast incremental checks here means most defects are caught before they hit the remote.
 
 **Files:**
+
 - Modify: `package.json` (add `tsc-files` devDep + lint-staged hook for type-check + vitest related)
 
 - [ ] **Step 1: Add `tsc-files`**
@@ -242,11 +257,12 @@ git commit -m "chore(quality): pre-commit runs tsc + related vitest on changed T
 
 ---
 
-## Task 0.4: Sort `package.json` files + lockfile freshness check in CI
+### Task 0.4: Sort `package.json` files + lockfile freshness check in CI
 
 **Why:** Tiny diff-noise reducer; sort-package-json keeps `dependencies` / `devDependencies` / `scripts` in deterministic order so PR diffs are easy to read. Lockfile freshness check catches drift between `package.json` and `pnpm-lock.yaml`.
 
 **Files:**
+
 - Modify: `package.json` (add `sort-package-json` to lint-staged)
 - Modify: `.github/workflows/ci.yml` (add lockfile-freshness job)
 
@@ -273,13 +289,13 @@ Run: `pnpm exec sort-package-json package.json apps/*/package.json packages/*/pa
 Edit `.github/workflows/ci.yml`. Add this step immediately after `Install dependencies`:
 
 ```yaml
-      - name: Verify lockfile is up to date
-        run: |
-          pnpm install --frozen-lockfile --lockfile-only
-          if ! git diff --exit-code pnpm-lock.yaml; then
-            echo "::error::pnpm-lock.yaml is out of date — run 'pnpm install' locally"
-            exit 1
-          fi
+- name: Verify lockfile is up to date
+  run: |
+    pnpm install --frozen-lockfile --lockfile-only
+    if ! git diff --exit-code pnpm-lock.yaml; then
+      echo "::error::pnpm-lock.yaml is out of date — run 'pnpm install' locally"
+      exit 1
+    fi
 ```
 
 - [ ] **Step 5: Commit**
@@ -292,11 +308,12 @@ git commit -m "chore(quality): sort package.json + verify lockfile freshness in 
 
 ---
 
-## Task 0.5: Vitest coverage with v8 provider and ratchet thresholds
+### Task 0.5: Vitest coverage with v8 provider and ratchet thresholds
 
 **Why:** Phase 3 adds significant new tests. Without coverage thresholds the tests can rot silently. We set a ratchet — current coverage becomes the floor, so future PRs can't drop coverage.
 
 **Files:**
+
 - Modify: `apps/web/vitest.config.ts`
 - Modify: `packages/ai-safety/vitest.config.ts` (or root config if shared)
 
@@ -378,11 +395,12 @@ git commit -m "chore(quality): enable vitest v8 coverage with starter thresholds
 
 ---
 
-## Task 0.6: Security response headers (active runtime safety)
+### Task 0.6: Security response headers (active runtime safety)
 
 **Why:** Active layer #1. Even with strong server-side code, browsers need CSP, HSTS, etc. to defend against XSS, clickjacking, and MIME sniffing. Set them once at the framework boundary.
 
 **Files:**
+
 - Modify: `apps/web/middleware.ts`
 
 - [ ] **Step 1: Read the existing middleware**
@@ -437,11 +455,12 @@ git commit -m "feat(security): set CSP, HSTS, X-Frame-Options, Referrer-Policy g
 
 ---
 
-## Task 0.7: Health-check endpoint
+### Task 0.7: Health-check endpoint
 
 **Why:** Active liveness/readiness signal so Docker, uptime monitors, and orchestrators can verify the app is up and the DB is reachable. Single GET endpoint that fans out to dependency checks.
 
 **Files:**
+
 - Create: `apps/web/app/api/health/route.ts`
 - Test: `apps/web/__tests__/health.test.ts`
 
@@ -529,11 +548,12 @@ git commit -m "feat(ops): /api/health endpoint with DB check + Docker HEALTHCHEC
 
 ---
 
-## Task 0.8: Structured audit log for security-sensitive events
+### Task 0.8: Structured audit log for security-sensitive events
 
 **Why:** Active observability — emit a structured log line every time someone hits a security-sensitive endpoint (setup, sign-in). Operators can grep `docker compose logs` to see exactly who did what. Forms the basis for future SIEM ingestion.
 
 **Files:**
+
 - Create: `apps/web/lib/audit-log.ts`
 - Test: `apps/web/__tests__/audit-log.test.ts`
 - Modify: `apps/web/app/api/setup/route.ts` (emit events)
@@ -615,11 +635,12 @@ git commit -m "feat(security): structured audit log for setup events"
 
 ---
 
-## Task 0.9: Scheduled `pnpm audit` + Dependabot
+### Task 0.9: Scheduled `pnpm audit` + Dependabot
 
-**Why:** Active dependency vigilance. `pnpm audit` checks for known CVEs in your dependency tree; running it weekly catches issues that landed *after* you last installed. Dependabot opens PRs to bump dependencies so the audit stays clean over time.
+**Why:** Active dependency vigilance. `pnpm audit` checks for known CVEs in your dependency tree; running it weekly catches issues that landed _after_ you last installed. Dependabot opens PRs to bump dependencies so the audit stays clean over time.
 
 **Files:**
+
 - Create: `.github/workflows/security-audit.yml`
 - Create: `.github/dependabot.yml`
 
@@ -688,11 +709,12 @@ git commit -m "ci(security): weekly pnpm audit + Dependabot for npm and actions"
 
 ---
 
-## Task 0.10: Strengthen CI workflow
+### Task 0.10: Strengthen CI workflow
 
 **Why:** Roll up all the new local checks into CI so a PR that bypasses the pre-commit hook still gets stopped.
 
 **Files:**
+
 - Modify: `.github/workflows/ci.yml`
 
 - [ ] **Step 1: Add steps for markdown lint, secret scan, and sort-package-json check**
@@ -700,33 +722,33 @@ git commit -m "ci(security): weekly pnpm audit + Dependabot for npm and actions"
 Insert these steps in `.github/workflows/ci.yml` immediately after `Format check`:
 
 ```yaml
-      - name: Markdown lint
-        run: pnpm lint:md
+- name: Markdown lint
+  run: pnpm lint:md
 
-      - name: Secret scan
-        run: pnpm exec secretlint "**/*"
+- name: Secret scan
+  run: pnpm exec secretlint "**/*"
 
-      - name: package.json sort check
-        run: |
-          pnpm exec sort-package-json --check \
-            package.json apps/*/package.json packages/*/package.json
+- name: package.json sort check
+  run: |
+    pnpm exec sort-package-json --check \
+      package.json apps/*/package.json packages/*/package.json
 ```
 
 Then immediately after the existing `Test` step, add:
 
 ```yaml
-      - name: Coverage
-        run: pnpm test:coverage
+- name: Coverage
+  run: pnpm test:coverage
 
-      - name: Upload coverage artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: |
-            apps/web/coverage
-            packages/*/coverage
-          if-no-files-found: ignore
+- name: Upload coverage artifact
+  if: always()
+  uses: actions/upload-artifact@v4
+  with:
+    name: coverage
+    path: |
+      apps/web/coverage
+      packages/*/coverage
+    if-no-files-found: ignore
 ```
 
 - [ ] **Step 2: Commit**
@@ -738,13 +760,14 @@ git commit -m "ci(quality): add md-lint, secret-scan, sort-pkg-json, coverage up
 
 ---
 
-# Phase 1 — Docker bootstrap
+## Phase 1 — Docker bootstrap
 
-## Task 1: Generate a temporary `AUTH_SECRET` at container boot
+### Task 1: Generate a temporary `AUTH_SECRET` at container boot
 
 **Why:** `docker-compose.yml` does not pass `AUTH_SECRET`. NextAuth needs one before the setup wizard can write the real one. Without this, the first NextAuth request crashes.
 
 **Files:**
+
 - Modify: `docker-entrypoint.sh:1-9`
 
 - [ ] **Step 1: Edit the entrypoint to generate a bootstrap secret if none present**
@@ -793,11 +816,12 @@ git commit -m "fix(docker): bootstrap AUTH_SECRET so NextAuth boots before setup
 
 ---
 
-## Task 2: Run DB migrations on first container boot
+### Task 2: Run DB migrations on first container boot
 
 **Why:** `docker-entrypoint.sh` does not run `drizzle-kit push` before starting the server, so on first boot the `user`/`account`/`session`/`verificationToken` tables don't exist and every auth attempt throws a SQL error.
 
 **Files:**
+
 - Modify: `docker-entrypoint.sh`
 - Modify: `Dockerfile:25-53` (copy drizzle-kit + schema into the runtime image)
 
@@ -846,11 +870,12 @@ git commit -m "fix(docker): run drizzle-kit push on container boot so DB tables 
 
 ---
 
-## Task 3: Add a one-time setup token to gate `/api/setup` POST
+### Task 3: Add a one-time setup token to gate `/api/setup` POST
 
 **Why:** Currently `/api/setup` POST is unauthenticated. During the boot window before any provider is configured, anyone reaching port 11000 can supply their own Google/Resend credentials. This task introduces a one-time token generated at boot, printed to logs, and required by the wizard.
 
 **Files:**
+
 - Create: `apps/web/lib/setup-token.ts`
 - Test: `apps/web/__tests__/setup-token.test.ts`
 - Modify: `apps/web/app/api/setup/route.ts`
@@ -1011,13 +1036,14 @@ git commit -m "feat(auth): gate /api/setup with one-time token printed at contai
 
 ---
 
-# Phase 2 — Persistent guardrail state
+## Phase 2 — Persistent guardrail state
 
-## Task 4: Define storage interfaces in `@workspace/ai-safety`
+### Task 4: Define storage interfaces in `@workspace/ai-safety`
 
 **Why:** Rate limiter and token budget both use process-local `Map` stores. We need to swap them for pluggable stores so the SQLite-backed implementations can be injected.
 
 **Files:**
+
 - Create: `packages/ai-safety/src/storage/types.ts`
 - Create: `packages/ai-safety/src/storage/index.ts`
 
@@ -1067,11 +1093,12 @@ git commit -m "feat(ai-safety): introduce RateLimitStore and TokenBudgetStore in
 
 ---
 
-## Task 5: Memory-backed stores (preserve current behavior)
+### Task 5: Memory-backed stores (preserve current behavior)
 
 **Why:** Existing callers must keep working without changes. The current in-memory behavior moves into explicit `MemoryRateLimitStore` and `MemoryTokenBudgetStore` classes that satisfy the new interfaces.
 
 **Files:**
+
 - Create: `packages/ai-safety/src/storage/memory-stores.ts`
 - Test: `packages/ai-safety/src/__tests__/memory-stores.test.ts`
 - Modify: `packages/ai-safety/src/storage/index.ts`
@@ -1204,11 +1231,12 @@ git commit -m "feat(ai-safety): add MemoryRateLimitStore and MemoryTokenBudgetSt
 
 ---
 
-## Task 6: Refactor `RateLimiter` to use a store
+### Task 6: Refactor `RateLimiter` to use a store
 
 **Why:** With memory store in place, the `RateLimiter` class becomes a thin layer over a store. This unlocks swapping in SQLite later without touching the algorithm.
 
 **Files:**
+
 - Modify: `packages/ai-safety/src/guardrails/rate-limiter.ts`
 - Modify: `packages/ai-safety/src/types.ts`
 - Modify: `packages/ai-safety/src/__tests__/rate-limiter.test.ts`
@@ -1305,11 +1333,12 @@ git commit -m "refactor(ai-safety): RateLimiter delegates to RateLimitStore (asy
 
 ---
 
-## Task 7: Refactor `TokenBudget` to use a store and make `tokensUsed` non-optional
+### Task 7: Refactor `TokenBudget` to use a store and make `tokensUsed` non-optional
 
 **Why:** Addresses I3 (silent no-op when callers omit `tokensUsed`) and prepares for the SQLite store. The middleware will fall back to the estimator if a handler genuinely cannot report token usage, but the type stops being misleading.
 
 **Files:**
+
 - Modify: `packages/ai-safety/src/guardrails/token-budget.ts`
 - Modify: `packages/ai-safety/src/types.ts`
 - Modify: `packages/ai-safety/src/middleware/ai-safety-middleware.ts`
@@ -1413,11 +1442,12 @@ git commit -m "refactor(ai-safety): TokenBudget uses store; tokensUsed required 
 
 ---
 
-## Task 8: SQLite-backed stores using libSQL
+### Task 8: SQLite-backed stores using libSQL
 
 **Why:** This is the actual fix for C1 — counters and budgets now survive container restarts and work across processes.
 
 **Files:**
+
 - Create: `packages/ai-safety/src/storage/libsql-stores.ts`
 - Test: `packages/ai-safety/src/__tests__/libsql-stores.test.ts`
 - Modify: `packages/ai-safety/src/storage/index.ts`
@@ -1621,11 +1651,12 @@ git commit -m "feat(ai-safety): libSQL-backed RateLimit and TokenBudget stores"
 
 ---
 
-## Task 9: Wire SQLite stores into the web app
+### Task 9: Wire SQLite stores into the web app
 
 **Why:** Now the app uses the persistent stores by default. This is what makes C1 actually fixed for end users.
 
 **Files:**
+
 - Create: `apps/web/lib/ai-safety.ts`
 
 - [ ] **Step 1: Create a shared middleware factory**
@@ -1692,13 +1723,14 @@ git commit -m "feat(web): wire libSQL-backed rate-limit and token-budget stores"
 
 ---
 
-# Phase 3 — Safety hardening
+## Phase 3 — Safety hardening
 
-## Task 10: Strip zero-width / control characters in `sanitizeInput`
+### Task 10: Strip zero-width / control characters in `sanitizeInput`
 
 **Why:** Addresses I1 — current sanitizer applies NFKC normalization but doesn't strip zero-width joiners or BOMs, so an attacker can split a known pattern with invisible characters.
 
 **Files:**
+
 - Modify: `packages/ai-safety/src/guardrails/input-sanitizer.ts`
 - Modify: `packages/ai-safety/src/__tests__/input-sanitizer.test.ts`
 
@@ -1765,11 +1797,12 @@ git commit -m "fix(ai-safety): strip zero-width / format chars before pattern ma
 
 ---
 
-## Task 11: Compute confidence from match count in `checkContentSafety`
+### Task 11: Compute confidence from match count in `checkContentSafety`
 
 **Why:** Addresses I5 — the `confidence` field always returns `0.6` or `1.0`, which is misleading for callers building threshold logic.
 
 **Files:**
+
 - Modify: `packages/ai-safety/src/moderation/content-safety.ts`
 - Create: `packages/ai-safety/src/__tests__/content-safety.test.ts`
 
@@ -1868,11 +1901,12 @@ git commit -m "fix(ai-safety): compute content-safety confidence from match coun
 
 ---
 
-## Task 12: Add tests for `filterOutput`
+### Task 12: Add tests for `filterOutput`
 
 **Why:** Addresses part of I2 — output-filter currently has zero tests despite being part of the "safety promise."
 
 **Files:**
+
 - Create: `packages/ai-safety/src/__tests__/output-filter.test.ts`
 
 - [ ] **Step 1: Write the test**
@@ -1933,11 +1967,12 @@ git commit -m "test(ai-safety): cover filterOutput happy path, defaults, and ove
 
 ---
 
-## Task 13: Add tests for the composed middleware + ratchet coverage thresholds
+### Task 13: Add tests for the composed middleware + ratchet coverage thresholds
 
 **Why:** Addresses part of I2 — the pipeline that composes everything has no tests.
 
 **Files:**
+
 - Create: `packages/ai-safety/src/__tests__/ai-safety-middleware.test.ts`
 
 - [ ] **Step 1: Write the test**
@@ -2043,13 +2078,14 @@ git commit -m "test(ai-safety): cover middleware pipeline; raise coverage floor 
 
 ---
 
-# Phase 4 — OAuth UX fix
+## Phase 4 — OAuth UX fix
 
-## Task 14: Dynamic Google OAuth redirect URI hint
+### Task 14: Dynamic Google OAuth redirect URI hint
 
 **Why:** Addresses I4 — the setup wizard tells operators to use `http://localhost:11000/api/auth/callback/google`. On any non-local deployment this silently fails. The hint should use the actual `AUTH_URL`.
 
 **Files:**
+
 - Modify: `apps/web/app/api/setup/route.ts` (return the current `AUTH_URL` from GET)
 - Modify: `apps/web/app/(auth)/login/page.tsx` (render dynamic URL)
 
@@ -2094,20 +2130,21 @@ git commit -m "fix(auth): show dynamic Google OAuth redirect URI based on AUTH_U
 
 ---
 
-# Phase 5 — Documentation
+## Phase 5 — Documentation
 
-## Task 15: Write `docs/ai-safety.md`
+### Task 15: Write `docs/ai-safety.md`
 
 **Why:** Establishes the canonical single source of truth for the guardrails so the README can be a short, stable promise and so future guardrail additions update one file.
 
 **Files:**
+
 - Create: `docs/ai-safety.md`
 
 - [ ] **Step 1: Create the doc**
 
 Create `docs/ai-safety.md` with these sections (write full prose; this outline is a guide, not placeholder content):
 
-1. **Overview** — One paragraph: what this package protects against (abuse, prompt injection, accidental data leaks, runaway cost). What it does *not* try to be (a substitute for a production moderation API or for human review).
+1. **Overview** — One paragraph: what this package protects against (abuse, prompt injection, accidental data leaks, runaway cost). What it does _not_ try to be (a substitute for a production moderation API or for human review).
 2. **How they compose** — Describe `createAiSafetyMiddleware` pipeline order with the actual code reference: `rate-limit → sanitize → content-safety (input) → token-budget → MODEL → output-filter → pii-redactor`. Include a small fenced code block showing the canonical usage from `apps/web/lib/ai-safety.ts`.
 3. **Each guardrail** — One subsection per guardrail. For each: what it does (plain language), what it protects against, default config (from the source files), how to enable/configure (real code example), limitations (honest), and the source file path.
    1. Rate limiter — `packages/ai-safety/src/guardrails/rate-limiter.ts`. Note: persists via `RateLimitStore`. Default in dev is `MemoryRateLimitStore`; the web app wires up `LibsqlRateLimitStore` so counts survive container restarts.
@@ -2129,11 +2166,12 @@ git commit -m "docs: add canonical AI safety guardrail reference"
 
 ---
 
-## Task 15.5: Write `docs/overview.md` — what the app is and what it does
+### Task 15.5: Write `docs/overview.md` — what the app is and what it does
 
 **Why:** There is currently no doc that explains, in plain language, what this app IS and what it CAN DO. Prospective users need it to decide if it fits. IT / security auditors need it to verify what's in the box without reading source. The README's quick start tells you how to run it, not what you're running.
 
 **Files:**
+
 - Create: `docs/overview.md`
 
 - [ ] **Step 1: Create the overview doc**
@@ -2189,11 +2227,12 @@ git commit -m "docs: add overview describing what the app is and what it does"
 
 ---
 
-## Task 16: Move displaced developer content into existing docs
+### Task 16: Move displaced developer content into existing docs
 
 **Why:** README is shedding "Editing the Code", "Adding a New Page", "Adding UI Components", and the maintainer `<details>` block. That content needs a home before the README rewrite.
 
 **Files:**
+
 - Modify: `docs/getting-started.md` (append "Editing the code (VS Code)", "Adding a new page")
 - Modify: `docs/architecture.md` (append "Docker architecture", "Auth provider detection")
 - Modify: `docs/coding-conventions.md` (append "Adding UI components")
@@ -2223,11 +2262,12 @@ git commit -m "docs: absorb developer content from README into existing docs/ pa
 
 ---
 
-## Task 17: Rewrite `README.md`
+### Task 17: Rewrite `README.md`
 
 **Why:** This is the headline change — README leads with the non-technical "run it as an app" flow, AI safety is promoted to a major section right after the quick start, and developer content is replaced with links into `docs/`.
 
 **Files:**
+
 - Rewrite: `README.md`
 
 - [ ] **Step 1: Replace `README.md` entirely with the new structure**
@@ -2240,81 +2280,66 @@ The new file follows this outline (write the full prose — no placeholders):
 > A safe, ready-to-run app you can install on any computer.
 
 [ Section 0: What this is ]
-  Two short paragraphs:
-    1. What the app is: a self-hosted starter app with sign-in, AI safety,
-       and accessibility built in. Designed for schools, small teams, and
-       anyone who needs a safe, auditable foundation.
-    2. What it gives you the moment you install it: sign-in, a protected
-       dashboard, AI safety guardrails, dark mode, SQLite database — all
-       running locally in Docker.
+Two short paragraphs: 1. What the app is: a self-hosted starter app with sign-in, AI safety,
+and accessibility built in. Designed for schools, small teams, and
+anyone who needs a safe, auditable foundation. 2. What it gives you the moment you install it: sign-in, a protected
+dashboard, AI safety guardrails, dark mode, SQLite database — all
+running locally in Docker.
 
-  Closing line:
-    "Full breakdown of features, what it isn't, and the audit-relevant
-     facts: [docs/overview.md](docs/overview.md)."
+Closing line:
+"Full breakdown of features, what it isn't, and the audit-relevant
+facts: [docs/overview.md](docs/overview.md)."
 
 [ Section 1: Run it in 3 steps ]
-  Mostly the existing content of "Get Running in 3 Steps":
-   - Install Docker Desktop (Mac/Windows/Linux links)
-   - Download the project (zip or git clone)
-   - Run ./start.sh (or `docker compose up -d --build` on Windows)
+Mostly the existing content of "Get Running in 3 Steps":
+
+- Install Docker Desktop (Mac/Windows/Linux links)
+- Download the project (zip or git clone)
+- Run ./start.sh (or `docker compose up -d --build` on Windows)
   Mention http://localhost:11000 + setup wizard.
   Note the SETUP TOKEN appears in `docker compose logs web` — paste it
   into the wizard. (References the work done in Task 3.)
 
 [ Section 2: 🛡️ Built-in AI safety ]
-  One-sentence promise:
-    "Every AI feature you build on this template is protected by guardrails
-     that run before each request reaches the model and after each response
-     comes back."
+One-sentence promise:
+"Every AI feature you build on this template is protected by guardrails
+that run before each request reaches the model and after each response
+comes back."
 
-  Six bullets, plain language (Path B unqualified wording from the spec):
-    - Rate limits — stop abuse and runaway costs (persists across restarts)
-    - Prompt-injection protection — sanitizes risky user input
-    - PII redaction — strips emails, phone numbers, and similar from prompts
-    - Output filtering — blocks unsafe model responses before users see them
-    - Content moderation — flags harmful categories
-    - Token budgets — cap spend per user or session
+Six bullets, plain language (Path B unqualified wording from the spec): - Rate limits — stop abuse and runaway costs (persists across restarts) - Prompt-injection protection — sanitizes risky user input - PII redaction — strips emails, phone numbers, and similar from prompts - Output filtering — blocks unsafe model responses before users see them - Content moderation — flags harmful categories - Token budgets — cap spend per user or session
 
-  Short "why it matters" paragraph.
+Short "why it matters" paragraph.
 
-  Closing line with link:
-    "Every guardrail, what it catches, what it doesn't catch, and how to
-     configure it: [docs/ai-safety.md](docs/ai-safety.md)."
+Closing line with link:
+"Every guardrail, what it catches, what it doesn't catch, and how to
+configure it: [docs/ai-safety.md](docs/ai-safety.md)."
 
 [ Section 3: Set up sign-in ]
-  Existing "Setting Up Authentication" content (Google + Email OTP).
-  Update the Google instruction to say "set redirect URI to YOUR_AUTH_URL +
-  /api/auth/callback/google (the setup wizard shows you the exact value)".
+Existing "Setting Up Authentication" content (Google + Email OTP).
+Update the Google instruction to say "set redirect URI to YOUR_AUTH_URL +
+/api/auth/callback/google (the setup wizard shows you the exact value)".
 
 [ Section 4: What else you get ]
-  Short bullets:
-    - Auth — Google + email one-time codes
-    - Accessibility — APCA AAA 3.0 contrast, keyboard nav, screen reader
-    - Database — SQLite, lives inside the container
-    - Dark mode — press `d` to toggle
+Short bullets: - Auth — Google + email one-time codes - Accessibility — APCA AAA 3.0 contrast, keyboard nav, screen reader - Database — SQLite, lives inside the container - Dark mode — press `d` to toggle
 
 [ Section 5: Everyday commands ]
-  The existing table (start.sh / down / logs / down -v).
+The existing table (start.sh / down / logs / down -v).
 
 [ Section 6: Need help? ]
-  Run logs, start fresh, file an issue.
+Run logs, start fresh, file an issue.
 
 [ Section 7: For developers ]
-  One paragraph:
-    "Built with Next.js 16, TypeScript, Drizzle/SQLite, Tailwind v4, and
-     pnpm workspaces. The template is a monorepo with `apps/web` (the app
-     itself) and `packages/ai-safety`, `packages/accessibility`, and
-     `packages/ui` (shared libraries)."
+One paragraph:
+"Built with Next.js 16, TypeScript, Drizzle/SQLite, Tailwind v4, and
+pnpm workspaces. The template is a monorepo with `apps/web` (the app
+itself) and `packages/ai-safety`, `packages/accessibility`, and
+`packages/ui` (shared libraries)."
 
-  Links:
-    - Overview (what this is + audit info) → docs/overview.md
-    - Set up your dev environment → docs/getting-started.md
-    - Architecture and tech stack → docs/architecture.md
-    - Coding conventions → docs/coding-conventions.md
-    - AI safety reference → docs/ai-safety.md
+Links: - Overview (what this is + audit info) → docs/overview.md - Set up your dev environment → docs/getting-started.md - Architecture and tech stack → docs/architecture.md - Coding conventions → docs/coding-conventions.md - AI safety reference → docs/ai-safety.md
 ```
 
 **Required links the README must contain:**
+
 - `docs/overview.md` from the "What this is" intro section (Section 0)
 - `docs/ai-safety.md` from the "🛡️ Built-in AI safety" section (Section 2)
 - `docs/getting-started.md`, `docs/architecture.md`, `docs/coding-conventions.md` from the "For developers" section (Section 7)
@@ -2332,7 +2357,7 @@ git commit -m "docs: rewrite README for non-technical-first, AI safety as headli
 
 ---
 
-# Self-review
+## Self-review
 
 After completing all tasks, run:
 

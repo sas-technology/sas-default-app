@@ -10,7 +10,7 @@ A production-ready Next.js monorepo template used as a starting point for new pr
 
 ## Monorepo Structure
 
-```
+```text
 .
 ├── apps/
 │   └── web/                            # Next.js 16 app (App Router, RSC, Turbopack)

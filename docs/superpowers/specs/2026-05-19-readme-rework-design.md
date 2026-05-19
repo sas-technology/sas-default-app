@@ -39,37 +39,46 @@ Alternatives considered:
 
 ### README.md final outline
 
-```
+```markdown
 # MiniApp Template
+
 > One-line pitch: a safe, ready-to-run app you can install on any computer.
 
 ## Run it in 3 steps
-   1. Install Docker Desktop
-   2. Download this project
-   3. ./start.sh
-   (Content mostly unchanged from current README §1.)
+
+1.  Install Docker Desktop
+2.  Download this project
+3.  ./start.sh
+    (Content mostly unchanged from current README §1.)
 
 ## 🛡️ Built-in AI safety
-   Promise paragraph + 5–6 plain-language bullets + link to docs/ai-safety.md.
-   No code in this section.
+
+Promise paragraph + 5–6 plain-language bullets + link to docs/ai-safety.md.
+No code in this section.
 
 ## Set up sign-in
-   Google OAuth + Email OTP. Content mostly unchanged from current README §"Setting Up Authentication".
+
+Google OAuth + Email OTP. Content mostly unchanged from current README §"Setting Up Authentication".
 
 ## What else you get
-   Auth, accessibility (APCA AAA 3.0), dark mode, database — short bullets.
+
+Auth, accessibility (APCA AAA 3.0), dark mode, database — short bullets.
 
 ## Everyday commands
-   start.sh / docker compose down / logs / start fresh.
+
+start.sh / docker compose down / logs / start fresh.
 
 ## Need help?
-   Troubleshooting + issue link.
+
+Troubleshooting + issue link.
 
 ## For developers
-   One paragraph: stack summary + links to:
-   - docs/getting-started.md
-   - docs/architecture.md
-   - docs/coding-conventions.md
+
+One paragraph: stack summary + links to:
+
+- docs/getting-started.md
+- docs/architecture.md
+- docs/coding-conventions.md
 ```
 
 Sections removed from README (live in `docs/` or are dropped):
@@ -101,6 +110,7 @@ Approximately 200 words. Structure:
   - Output filtering — blocks unsafe model responses before users see them
   - Content moderation — flags harmful categories
   - Token budgets — caps spend per user or session
+
 - **Why it matters.** Short paragraph: especially if your users are students or members of the public.
 - **Link.** "Every guardrail, what it catches, what it doesn't catch, and how to configure it: [docs/ai-safety.md](docs/ai-safety.md)."
 
@@ -110,42 +120,49 @@ No code samples in this README section. All code lives in the linked doc.
 
 Canonical reference, single source of truth.
 
-```
+```markdown
 # AI Safety Guardrails
 
 ## Overview
-   Threat model, design philosophy, what this package does and does not try to do.
+
+Threat model, design philosophy, what this package does and does not try to do.
 
 ## How they compose
-   Visual flow of createAiSafetyMiddleware():
-   input → sanitize → rate-limit → token-budget → MODEL → output-filter → redact → response
+
+Visual flow of createAiSafetyMiddleware():
+input → sanitize → rate-limit → token-budget → MODEL → output-filter → redact → response
 
 ## Each guardrail (consistent block per guardrail)
-   - What it does (plain language)
-   - What it protects against
-   - Default configuration
-   - How to enable / configure
-   - Limitations — honest list of what it does NOT catch
-   - Code example
 
-   Guardrails to document:
-   1. Rate limiter        (packages/ai-safety/src/guardrails/rate-limiter.ts)
-   2. Input sanitizer     (packages/ai-safety/src/guardrails/input-sanitizer.ts)
-   3. Output filter       (packages/ai-safety/src/guardrails/output-filter.ts)
-   4. Token budget        (packages/ai-safety/src/guardrails/token-budget.ts)
-   5. Content safety      (packages/ai-safety/src/moderation/content-safety.ts)
-   6. PII redactor        (packages/ai-safety/src/moderation/pii-redactor.ts)
+- What it does (plain language)
+- What it protects against
+- Default configuration
+- How to enable / configure
+- Limitations — honest list of what it does NOT catch
+- Code example
+
+Guardrails to document:
+
+1.  Rate limiter (packages/ai-safety/src/guardrails/rate-limiter.ts)
+2.  Input sanitizer (packages/ai-safety/src/guardrails/input-sanitizer.ts)
+3.  Output filter (packages/ai-safety/src/guardrails/output-filter.ts)
+4.  Token budget (packages/ai-safety/src/guardrails/token-budget.ts)
+5.  Content safety (packages/ai-safety/src/moderation/content-safety.ts)
+6.  PII redactor (packages/ai-safety/src/moderation/pii-redactor.ts)
 
 ## Using the composed middleware
-   Single example showing createAiSafetyMiddleware() in an API route.
-   (Existing CLAUDE.md sample is a starting point.)
+
+Single example showing createAiSafetyMiddleware() in an API route.
+(Existing CLAUDE.md sample is a starting point.)
 
 ## Extending
-   How to add a new guardrail to the pipeline.
+
+How to add a new guardrail to the pipeline.
 
 ## Known gaps and roadmap
-   Honest list of what's not yet implemented, weak defaults, or missing test coverage.
-   This is where the parallel codebase audit's AI-safety findings land.
+
+Honest list of what's not yet implemented, weak defaults, or missing test coverage.
+This is where the parallel codebase audit's AI-safety findings land.
 ```
 
 The "Known gaps and roadmap" section is deliberate — it keeps the doc honest, gives the audit a natural home, and signals to forks/contributors what to work on.

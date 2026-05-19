@@ -89,23 +89,23 @@ These are the pages and features that make this template useful as an actual app
 
 ### Priority: Template Polish
 
-4. **Landing page** (`/`) — The current landing page is generic. Update it to explain what the app does, with a clear "Get Started" CTA that links to `/login`.
+1. **Landing page** (`/`) — The current landing page is generic. Update it to explain what the app does, with a clear "Get Started" CTA that links to `/login`.
 
-5. **Signout flow** — Add a sign-out button to the dashboard. Use `signOut()` from `next-auth/react` and redirect to `/`.
+2. **Signout flow** — Add a sign-out button to the dashboard. Use `signOut()` from `next-auth/react` and redirect to `/`.
 
-6. **Loading states** — Add `loading.tsx` files to the dashboard route group for skeleton loading between page navigations.
+3. **Loading states** — Add `loading.tsx` files to the dashboard route group for skeleton loading between page navigations.
 
 ### Priority: AI Features (when the app needs AI)
 
-7. **AI chat route** (`/dashboard/chat`) — A basic chat interface that uses the `@workspace/ai-safety` middleware. Template for teachers building AI-powered tools.
+1. **AI chat route** (`/dashboard/chat`) — A basic chat interface that uses the `@workspace/ai-safety` middleware. Template for teachers building AI-powered tools.
 
-8. **AI API route** (`/api/ai/chat`) — Server-side route that composes the safety pipeline. Expects `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` in env — add to the setup wizard if used.
+2. **AI API route** (`/api/ai/chat`) — Server-side route that composes the safety pipeline. Expects `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` in env — add to the setup wizard if used.
 
 ### Priority: Admin & Multi-User
 
-9. **User management** — List users in the database, see when they last signed in. Admin-only page.
+1. **User management** — List users in the database, see when they last signed in. Admin-only page.
 
-10. **Role-based access** — Add a `role` column to the users table (`admin`, `teacher`, `student`). First user to sign in becomes admin.
+2. **Role-based access** — Add a `role` column to the users table (`admin`, `teacher`, `student`). First user to sign in becomes admin.
 
 ## How to Build Features
 

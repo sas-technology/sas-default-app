@@ -15,13 +15,13 @@ cp apps/web/.env.local.example apps/web/.env.local
 pnpm dev
 ```
 
-The app runs at http://localhost:11000.
+The app runs at <http://localhost:11000>.
 
 ## Development Workflow
 
 ### Branch Naming
 
-```
+```text
 feat/description     # New feature
 fix/description      # Bug fix
 chore/description    # Maintenance, deps, tooling
@@ -32,7 +32,7 @@ docs/description     # Documentation only
 
 We use [Conventional Commits](https://www.conventionalcommits.org/):
 
-```
+```text
 feat: add user profile page
 fix: OTP verification redirect loop
 chore: update drizzle-orm to v0.46

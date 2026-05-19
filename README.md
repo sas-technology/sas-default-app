@@ -37,7 +37,7 @@ Open a terminal in the project folder and run:
 
 > **Windows?** Open PowerShell in the folder and run: `docker compose up -d --build`
 
-The first build takes a few minutes. After that, your browser opens to **http://localhost:11000** and the app walks you through setting up authentication.
+The first build takes a few minutes. After that, your browser opens to **<http://localhost:11000>** and the app walks you through setting up authentication.
 
 That's it. You're running.
 
@@ -74,10 +74,12 @@ Want to customize the app? Open it in VS Code:
 3. When prompted, click **"Reopen in Container"**
 4. VS Code builds a development environment with everything pre-installed
 5. Open the terminal in VS Code and run:
+
    ```bash
    pnpm dev
    ```
-6. Open **http://localhost:11000** — changes you make to the code appear instantly
+
+6. Open **<http://localhost:11000>** — changes you make to the code appear instantly
 
 ### Option B: Local setup (if you prefer)
 
@@ -119,7 +121,7 @@ This template gives you a working app with:
 
 ### Project Layout
 
-```
+```text
 apps/web/                 # Your app lives here
   app/
     (auth)/login/         # Login page (auto-configured)
