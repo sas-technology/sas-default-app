@@ -14,6 +14,7 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@secretlint/secretlint-rule-preset-recommend": "^13.0.2",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "husky": "^9.1.7",
@@ -21,6 +22,7 @@
     "markdownlint-cli2": "^0.22.1",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
+    "secretlint": "^13.0.2",
     "turbo": "^2.8.17",
     "typescript": "5.9.3"
   },
