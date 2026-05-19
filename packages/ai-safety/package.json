@@ -32,10 +32,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "react": "^19.2.4"
+    "react": "^19.2.6"
   },
   "devDependencies": {
-    "@libsql/client": "^0.17.2",
+    "@libsql/client": "^0.17.3",
     "@workspace/typescript-config": "workspace:*",
     "typescript": "^5.9.3",
     "vitest": "^4.1.2"
