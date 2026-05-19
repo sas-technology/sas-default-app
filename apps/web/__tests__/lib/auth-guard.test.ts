@@ -27,7 +27,7 @@ describe("requireAuth", () => {
   })
 
   it("redirects to the login route when no session exists", async () => {
-    mockedAuth.mockResolvedValue(null)
+    mockedAuth.mockResolvedValue(null as never)
 
     await expect(requireAuth()).rejects.toThrow(`REDIRECT:${AUTH_ROUTES.login}`)
     expect(mockedRedirect).toHaveBeenCalledWith(AUTH_ROUTES.login)
