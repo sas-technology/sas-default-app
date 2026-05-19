@@ -2,6 +2,54 @@
 
 > A safe, ready-to-run starter for building your own classroom or team app. Drop the GitHub URL into your AI coding tool and start building.
 
+---
+
+## Start here — copy this into your AI tool
+
+Paste the block below into Claude Code, Cursor, Windsurf, Aider, ChatGPT, or any other AI coding tool. It tells the AI exactly what to do, asks what you want to build, and pins the rules it must follow.
+
+```text
+Clone https://github.com/sas-technology/sas-default-app and help me build a new app on top of it.
+
+Setup steps (do these first):
+  1. git clone https://github.com/sas-technology/sas-default-app
+  2. cd sas-default-app
+  3. pnpm install
+  4. Read AGENTS.md end-to-end — that is the canonical engineering reference for this codebase.
+  5. Start the dev server with `pnpm dev` (it runs on http://localhost:11000).
+
+Then ask me, one question at a time:
+  - What does the app do, in one sentence?
+  - Who are the users (teachers, students, parents, the public)?
+  - Do I need sign-in? Google OAuth, email OTP, or both?
+  - Will it use AI features? If so, what kind (chat, summarisation, tutoring, grading help, etc.)?
+  - Anything sensitive in scope (PII, student records, grades, health data)?
+
+After I answer, sketch a plan before writing code. Wait for me to approve it.
+
+Rules you MUST follow (SAS AI safety guidelines):
+  1. Wrap every AI route with `aiSafety()` from `@/lib/ai-safety`. Never call a model directly without it.
+  2. No PII in prompts. Redact emails, names, and IDs before sending to a model — the middleware does this automatically when you use it.
+  3. APCA AAA 3.0 contrast (not WCAG 2.x). Body Lc ≥ 90, large text Lc ≥ 75, non-text Lc ≥ 60. Use the helpers in `@workspace/accessibility/apca`.
+  4. Server Components by default. Only add `"use client"` when you genuinely need hooks, browser APIs, or event handlers.
+  5. No `any` types. Use `unknown` and narrow.
+  6. No external tracking, telemetry, or analytics. Data stays on the user's machine unless I explicitly opt in.
+  7. Don't bypass auth. Protected routes use `requireAuth()` or live under `app/(dashboard)/`.
+  8. Never use `--no-verify` on commits. If a pre-commit hook fails, fix the underlying issue.
+  9. Test what you build. Add Vitest tests for new logic and run `pnpm test` before declaring something done.
+  10. Ask me before adding new dependencies — keep the install footprint small and review the licence + maintainer.
+  11. Commit early and often, with conventional commits (`feat:`, `fix:`, `chore:`, `docs:`, `test:`).
+  12. If something is ambiguous, ask. Do not guess.
+
+When you are done with each chunk of work, run `pnpm typecheck && pnpm test && pnpm lint` and show me the result before moving on.
+
+Now ask me what I want to build.
+```
+
+That's it. Hand the prompt to your AI tool and answer its questions. The sections below are reference material you can ignore until later.
+
+---
+
 ## What this is
 
 A starter template, not a finished product. It comes with the boring-but-important parts already wired up — sign-in, AI safety guardrails, accessibility, a database, a packaging pipeline for a native Mac app — so you can focus on building whatever your students, teachers, or team actually need.
