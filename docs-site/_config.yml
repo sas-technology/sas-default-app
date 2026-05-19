@@ -1,0 +1,14 @@
+title: MiniApp Template
+description: A safe, ready-to-run app you can install on any computer.
+remote_theme: just-the-docs/just-the-docs
+url: ""
+baseurl: ""
+
+permalink: pretty
+exclude: [Gemfile, Gemfile.lock, vendor]
+
+color_scheme: light
+search_enabled: true
+
+aux_links:
+  GitHub: https://github.com/sas-technology/sas-default-app
