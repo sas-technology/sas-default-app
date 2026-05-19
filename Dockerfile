@@ -37,6 +37,14 @@ COPY --from=builder /app/apps/web/.next/standalone ./
 COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder /app/apps/web/public ./apps/web/public
 
+# Schema and drizzle-kit are needed at runtime to apply migrations on first boot
+COPY --from=builder /app/apps/web/drizzle.config.ts ./apps/web/drizzle.config.ts
+COPY --from=builder /app/apps/web/lib/db ./apps/web/lib/db
+COPY --from=builder /app/node_modules/drizzle-kit ./node_modules/drizzle-kit
+COPY --from=builder /app/node_modules/.bin/drizzle-kit ./node_modules/.bin/drizzle-kit
+COPY --from=builder /app/node_modules/@libsql ./node_modules/@libsql
+COPY --from=builder /app/node_modules/drizzle-orm ./node_modules/drizzle-orm
+
 # Copy entrypoint
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh

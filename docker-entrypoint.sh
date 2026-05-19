@@ -22,4 +22,10 @@ else
   . "$BOOTSTRAP_ENV"
 fi
 
+# Push the schema on every boot. drizzle-kit push is idempotent — no-ops if
+# the tables and columns already exist. Errors are non-fatal: the server will
+# still try to start so the operator can inspect logs.
+(cd /app/apps/web && /app/node_modules/.bin/drizzle-kit push --force) || \
+  echo ">>> drizzle-kit push failed; continuing anyway. See logs above."
+
 exec node apps/web/server.js
