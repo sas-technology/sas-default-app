@@ -12,44 +12,25 @@ Full breakdown of features, what it isn't, and the audit-relevant facts: [docs/o
 
 ---
 
-## Run it in 3 steps
+## Install on your Mac (recommended)
 
-### Step 1: Install Docker Desktop (one-time)
+1. **Download** [SASApp.dmg](https://github.com/sas-technology/sas-default-app/releases/latest)
+2. **Drag** SASApp.app to the Applications folder
+3. **Right-click → Open** the first time (macOS blocks unsigned apps by default; this only happens once)
 
-Docker is a free app that runs your project in an isolated container.
+The menu-bar icon shows the server status. Your browser opens automatically to `http://localhost:11000` so you can finish setup.
 
-| System      | Install Link                                                                                    |
-| ----------- | ----------------------------------------------------------------------------------------------- |
-| **Mac**     | [Download Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/)         |
-| **Windows** | [Download Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/) |
-| **Linux**   | [Docker Desktop for Linux](https://docs.docker.com/desktop/install/linux/)                      |
+The first launch shows a one-time setup token in a popup — copy it and paste it into the setup wizard to create your administrator account.
 
-Install it, open it, and wait for the whale icon to stop animating. That means Docker is ready.
+### Everyday actions
 
-### Step 2: Download this project
+Click the menu-bar icon for: **Open App**, **Restart Server**, **View Logs**, **Launch at Login**, **Quit**.
 
-**Option A — Click the green "Code" button** on GitHub, then **"Download ZIP"**. Unzip it anywhere.
+Your data lives at `~/Library/Application Support/SASApp/` (SQLite database, credentials, logs). It survives app updates.
 
-**Option B — Clone with Git** (if you have it):
+## Run as a server (Docker)
 
-```bash
-git clone https://github.com/sas-technology/sas-default-app.git
-cd sas-default-app
-```
-
-### Step 3: Start the app
-
-Open a terminal in the project folder and run:
-
-```bash
-./start.sh
-```
-
-> **Windows?** Open PowerShell in the folder and run: `docker compose up -d --build`
-
-The first build takes a few minutes. After that, your browser opens to **<http://localhost:11000>** and the setup wizard walks you through the rest.
-
-> **First-run setup token.** The setup wizard is locked behind a one-time token. To find it, run `docker compose logs web` in the project folder — the token is printed near the top of the log. Paste it into the wizard to unlock setup.
+For production deployments on Linux servers or cloud platforms. See [`docs/deployment/`](docs/deployment/) for Vercel, Netlify, Cloudflare, and self-hosted Docker guides.
 
 ---
 

@@ -8,6 +8,7 @@ noted below.
 
 | Option                       | Best for                                                                            | Auth + DB included        | AI safety                           | Cost                           | Setup time                         |
 | ---------------------------- | ----------------------------------------------------------------------------------- | ------------------------- | ----------------------------------- | ------------------------------ | ---------------------------------- |
+| macOS native app | Free | Trivial | LaunchAgent | **Recommended for local use.** See `apps/mac/README.md`. |
 | **Local Docker**             | Trying it out, small self-hosted deploys, classrooms with one teacher               | Bundled (SQLite + auth)   | Yes                                 | Free (your own hardware)       | ~5 min                             |
 | **Vercel**                   | Teams wanting hosted, no-ops, scalable                                              | Bring Turso (libSQL)      | Yes (libSQL-backed stores)          | Free hobby tier; pay for scale | ~15 min (incl. Turso)              |
 | **Netlify**                  | Same as Vercel; pick by preference                                                  | Bring Turso (libSQL)      | Yes                                 | Free starter; paid for usage   | ~15 min                            |
