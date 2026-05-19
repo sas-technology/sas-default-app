@@ -64,8 +64,18 @@ export function sanitizeInput(
     input = input.slice(0, maxLength)
   }
 
-  // Normalize unicode characters that could bypass pattern detection
-  let sanitized = input.normalize("NFKC")
+  // Strip zero-width, BOM, and bidi format characters before normalization
+  // so attackers can't split known patterns with invisible chars.
+  // Ranges: U+200B–U+200F (ZWSP, ZWNJ, ZWJ, LRM, RLM), U+202A–U+202E (bidi),
+  // U+2060–U+206F (invisible operators / format), U+FEFF (BOM).
+  // Replace with a space so that patterns using `\s+` between tokens still match
+  // when an attacker substitutes invisible characters for visible whitespace.
+  let sanitized = input
+    .replace(
+      /[\u{200B}-\u{200F}\u{202A}-\u{202E}\u{2060}-\u{206F}\u{FEFF}]/gu,
+      " "
+    )
+    .normalize("NFKC")
 
   // Check patterns based on sensitivity level
   const levels: string[] = []
