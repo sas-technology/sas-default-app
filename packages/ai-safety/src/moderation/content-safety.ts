@@ -53,21 +53,24 @@ export async function checkContentSafety(
 
   // Baseline pattern matching
   const flaggedCategories: ContentCategory[] = []
+  let matchCount = 0
 
   for (const category of categories) {
     const patterns = CATEGORY_PATTERNS[category]
     if (!patterns) continue
+    let categoryMatched = false
     for (const pattern of patterns) {
       if (pattern.test(content)) {
-        flaggedCategories.push(category)
-        break
+        matchCount++
+        categoryMatched = true
       }
     }
+    if (categoryMatched) flaggedCategories.push(category)
   }
 
-  return {
-    safe: flaggedCategories.length === 0,
-    flaggedCategories,
-    confidence: flaggedCategories.length > 0 ? 0.6 : 1.0,
-  }
+  // Confidence: 1 = no flags, otherwise rises with more matches (asymptotes to 1).
+  const confidence =
+    flaggedCategories.length === 0 ? 1 : 1 - 1 / (1 + matchCount)
+
+  return { safe: flaggedCategories.length === 0, flaggedCategories, confidence }
 }
