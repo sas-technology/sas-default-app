@@ -16,11 +16,14 @@ echo "==> Fetching Node.js binary"
 echo "==> Staging bundled resources"
 BUNDLED="${MAC_ROOT}/SASApp/Bundled"
 rm -rf "${BUNDLED}/standalone"
-cp -r "${REPO_ROOT}/apps/web/.next/standalone" "${BUNDLED}/standalone"
+# Use rsync instead of `cp -r` because pnpm's standalone output contains
+# broken symlinks under node_modules/.pnpm/node_modules/ that make `cp -r`
+# fail. rsync -a preserves symlinks as-is without trying to follow them.
+rsync -a "${REPO_ROOT}/apps/web/.next/standalone/" "${BUNDLED}/standalone/"
 mkdir -p "${BUNDLED}/standalone/apps/web/.next"
-cp -r "${REPO_ROOT}/apps/web/.next/static" "${BUNDLED}/standalone/apps/web/.next/static"
+rsync -a "${REPO_ROOT}/apps/web/.next/static/" "${BUNDLED}/standalone/apps/web/.next/static/"
 if [[ -d "${REPO_ROOT}/apps/web/public" ]]; then
-  cp -r "${REPO_ROOT}/apps/web/public" "${BUNDLED}/standalone/apps/web/public"
+  rsync -a "${REPO_ROOT}/apps/web/public/" "${BUNDLED}/standalone/apps/web/public/"
 fi
 
 echo "==> Regenerating Xcode project"
