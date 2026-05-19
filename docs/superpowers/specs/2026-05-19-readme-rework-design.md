@@ -191,6 +191,10 @@ This spec's recommendation: **Path A** for the documentation work (it's the unit
 
 **User decision (2026-05-19):** Path B. Fix all audit findings in priority order with regular commits, then publish the README rework and `docs/ai-safety.md` with unqualified "safety promise" wording. Implementation plan to be written in a separate document via the writing-plans skill.
 
+**Scope addition (2026-05-19):** Add `docs/overview.md` — a plain-language document explaining what the app is, what it can do out of the box, what it is not, the architecture in one paragraph, and an audit-relevant facts table (data residency, network surface, secrets handling, AI provider, logs, auth, accessibility). The README gains a "What this is" intro section (Section 0) that links to this doc. Reason: prospective users and IT/security auditors currently have no plain-language description of the app — they have to read code or developer docs. Implementation captured as Task 15.5 in the plan.
+
+**Scope addition (2026-05-19):** Add Phase 0 to the plan — quality and active-safety infrastructure. Pre-commit prevention (markdown lint, secret scan, type-check on changed files, related-tests, package.json sort) and active runtime safety (security response headers, `/api/health` endpoint, structured audit log for security-sensitive events, weekly dependency audit, Dependabot). Reason: the user asked for "significant test infrastructure and pre-commit checks, build checks, lint, json, markdown" plus "active safety and checks." Sequencing rationale: Phase 0 lands before Phases 1–5 so subsequent commits benefit from the hardened loop.
+
 ## Success criteria
 
 - A non-technical reader can read the README top-to-bottom without hitting a code sample or jargon that requires a developer background.
