@@ -86,3 +86,48 @@ The template includes NextAuth with a placeholder Credentials provider. To conne
 | ------------- | ------------------------------------------------------- |
 | `AUTH_SECRET` | Random secret for JWT signing (required)                |
 | `AUTH_URL`    | Full URL of your app (e.g., `https://myapp.vercel.app`) |
+
+## Editing the Code (VS Code)
+
+Want to customize the app? Open it in VS Code:
+
+### Option A: Dev Container (recommended)
+
+1. Install [VS Code](https://code.visualstudio.com/) and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-remote.remote-containers)
+2. Open the project folder in VS Code
+3. When prompted, click **"Reopen in Container"**
+4. VS Code builds a development environment with everything pre-installed
+5. Open the terminal in VS Code and run:
+
+   ```bash
+   pnpm dev
+   ```
+
+6. Open **<http://localhost:11000>** — changes you make to the code appear instantly
+
+### Option B: Local setup (if you prefer)
+
+Requires [Node.js 22+](https://nodejs.org/) and pnpm:
+
+```bash
+corepack enable pnpm
+pnpm install
+cp apps/web/.env.local.example apps/web/.env.local
+# Edit apps/web/.env.local with your credentials
+pnpm dev
+```
+
+## Adding a New Page
+
+Create a file in `apps/web/app/(dashboard)/your-page/page.tsx`:
+
+```tsx
+import { requireAuth } from "@/lib/auth-guard"
+
+export default async function YourPage() {
+  const session = await requireAuth()
+  return <div>Hello {session.user?.name}!</div>
+}
+```
+
+Pages inside `(dashboard)/` automatically require sign-in.
