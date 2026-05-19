@@ -1,0 +1,8 @@
+SASApp.xcodeproj/
+SASApp/Bundled/
+build/
+dist/
+DerivedData/
+.cache/
+*.xcuserstate
+xcuserdata/
