@@ -1,36 +1,68 @@
-# MiniApp Template
+# SAS Default App — starter template
 
-> A safe, ready-to-run app you can install on any computer.
+> A safe, ready-to-run starter for building your own classroom or team app. Drop the GitHub URL into your AI coding tool and start building.
 
 ## What this is
 
-This is a self-hosted starter app with sign-in, AI safety guardrails, and accessibility built in. It's designed for schools, small teams, and evaluators who want a working app they can run on their own machine — not a service to sign up for, and not a half-finished example. Install it, open a browser, and it works.
+A starter template, not a finished product. It comes with the boring-but-important parts already wired up — sign-in, AI safety guardrails, accessibility, a database, a packaging pipeline for a native Mac app — so you can focus on building whatever your students, teachers, or team actually need.
 
-Out of the box you get a sign-in screen, a protected dashboard, AI safety guardrails for any AI features you add, a dark mode, and a local SQLite database — all running natively on your own computer as a Mac app. No cloud account required, no data leaving your machine. (For servers and cloud platforms, the same app also runs in Docker.)
+The intended workflow: clone the repo, open it in your AI coding tool of choice (Claude Code, Cursor, Windsurf, etc.) or your IDE, tell it what you want to build, and ship. When you're ready to put it in front of users, the same codebase packages as a native Mac app, deploys to Vercel/Netlify/Cloudflare, or self-hosts in Docker — whichever fits.
 
-Full breakdown of features, what it isn't, and the audit-relevant facts: [docs/overview.md](docs/overview.md).
+Full feature list, what it isn't, and the audit-relevant facts: [docs/overview.md](docs/overview.md).
 
 ---
 
-## Install on your Mac (recommended)
+## Get started
 
-1. **Download** [SASApp.dmg](https://github.com/sas-technology/sas-default-app/releases/latest)
-2. **Drag** SASApp.app to the Applications folder
-3. **Right-click → Open** the first time (macOS blocks unsigned apps by default; this only happens once)
+You need: [Node.js 22+](https://nodejs.org), [pnpm 9+](https://pnpm.io/installation), and your favourite editor or AI coding tool.
 
-The menu-bar icon shows the server status. Your browser opens automatically to `http://localhost:11000` so you can finish setup.
+### Option A — let your AI tool do the work
 
-The first launch shows a one-time setup token in a popup — copy it and paste it into the setup wizard to create your administrator account.
+Copy this URL:
 
-### Everyday actions
+```text
+https://github.com/sas-technology/sas-default-app
+```
 
-Click the menu-bar icon for: **Open App**, **Restart Server**, **View Logs**, **Launch at Login**, **Quit**.
+Open Claude Code, Cursor, Windsurf, Aider, or whatever you use, and tell it:
 
-Your data lives at `~/Library/Application Support/SASApp/` (SQLite database, credentials, logs). It survives app updates.
+> Clone <https://github.com/sas-technology/sas-default-app>, install dependencies with pnpm, start the dev server, and then help me [build the thing you want].
 
-## Run as a server (Docker)
+It will clone, install, and open the dev server at `http://localhost:11000`. From there, describe what you want and let it edit the code.
 
-For production deployments on Linux servers or cloud platforms. See [`docs/deployment/`](docs/deployment/) for Vercel, Netlify, Cloudflare, and self-hosted Docker guides.
+### Option B — do it yourself
+
+```bash
+git clone https://github.com/sas-technology/sas-default-app
+cd sas-default-app
+pnpm install
+pnpm dev
+```
+
+Open `http://localhost:11000`.
+
+### Option C — download a ZIP
+
+1. Open [the repo on GitHub](https://github.com/sas-technology/sas-default-app)
+2. Click **Code → Download ZIP**
+3. Unzip, open the folder in your editor or AI tool, then `pnpm install && pnpm dev`
+
+---
+
+## Ship your customized app
+
+When the app is ready for users, pick a target:
+
+| Target               | When to use it                                                              | How                                                            |
+| -------------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| **macOS app**        | Individual teachers, classrooms, evaluators — drag a `.dmg` to Applications | `./apps/mac/scripts/build.sh` → produces a `.dmg`              |
+| **Docker**           | Self-hosting on a Linux server or VPS                                       | `./start.sh` (or `docker compose up -d --build`)               |
+| **Vercel**           | Hosted, no-ops, scalable                                                    | [docs/deployment/vercel.md](docs/deployment/vercel.md)         |
+| **Netlify**          | Same as Vercel, pick by preference                                          | [docs/deployment/netlify.md](docs/deployment/netlify.md)       |
+| **Cloudflare**       | Edge performance, global                                                    | [docs/deployment/cloudflare.md](docs/deployment/cloudflare.md) |
+| **Sheets companion** | Zero-infra, very simple use cases                                           | [apps/sheets/README.md](apps/sheets/README.md)                 |
+
+Full comparison + decision matrix: [docs/deployment/](docs/deployment/).
 
 ---
 
@@ -82,23 +114,21 @@ Enter your credentials in the wizard, click **Save and start**, and the app rest
 
 ---
 
-## Deploy somewhere else
+## Everyday commands (development)
 
-The Mac app is the default for local use, but the same app runs in other places too.
+| What             | Command          |
+| ---------------- | ---------------- |
+| Start dev server | `pnpm dev`       |
+| Run tests        | `pnpm test`      |
+| Type check       | `pnpm typecheck` |
+| Lint             | `pnpm lint`      |
+| Format           | `pnpm format`    |
+| Push DB schema   | `pnpm db:push`   |
+| Open DB browser  | `pnpm db:studio` |
 
-- **Mac app** — what the install above gives you. Best for individual teachers, evaluators, and small classrooms.
-- **Docker** — for self-hosting on a Linux server. See [`docs/deployment/`](docs/deployment/).
-- **Vercel** — [docs/deployment/vercel.md](docs/deployment/vercel.md)
-- **Netlify** — [docs/deployment/netlify.md](docs/deployment/netlify.md)
-- **Cloudflare Workers** — [docs/deployment/cloudflare.md](docs/deployment/cloudflare.md)
-- **GitHub Pages (docs only)** — [docs/deployment/github-pages.md](docs/deployment/github-pages.md)
-- **Google Apps Script + Sheets companion** — [apps/sheets/README.md](apps/sheets/README.md) — a zero-infrastructure alternative for very simple use cases
+Filter to one workspace: `pnpm --filter sas-default-app-web <cmd>`. Dev server runs on `http://localhost:11000`.
 
----
-
-## Everyday commands
-
-### Mac app
+### After you build & package as a Mac app
 
 | What           | How                                                                             |
 | -------------- | ------------------------------------------------------------------------------- |
@@ -108,7 +138,7 @@ The Mac app is the default for local use, but the same app runs in other places 
 | View logs      | Menu bar icon → **View Logs** (or `~/Library/Application Support/SASApp/logs/`) |
 | Start fresh    | Quit, then delete `~/Library/Application Support/SASApp/`                       |
 
-### Docker (server use)
+### Or if you run it in Docker
 
 | What                    | Command                  |
 | ----------------------- | ------------------------ |
@@ -116,14 +146,6 @@ The Mac app is the default for local use, but the same app runs in other places 
 | Stop the app            | `docker compose down`    |
 | View logs               | `docker compose logs`    |
 | Start fresh (wipe data) | `docker compose down -v` |
-
-### Development
-
-| What             | Command          |
-| ---------------- | ---------------- |
-| Start dev server | `pnpm dev`       |
-| Run tests        | `pnpm test`      |
-| Check for errors | `pnpm typecheck` |
 
 ---
 
