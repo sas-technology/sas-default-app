@@ -3,6 +3,7 @@ import { writeFile } from "node:fs/promises"
 import { existsSync } from "node:fs"
 import { randomBytes } from "node:crypto"
 import { auditLog } from "@/lib/audit-log"
+import { consumeSetupToken } from "@/lib/setup-token"
 
 // In Docker: write to /app/data/.env (persistent volume, sourced by entrypoint)
 // In dev: write to .env.local (Next.js reads it on startup)
@@ -37,6 +38,20 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Setup is locked. Auth providers are already configured." },
       { status: 403 }
+    )
+  }
+
+  const provided = request.headers.get("x-setup-token") ?? ""
+  if (!(await consumeSetupToken(provided))) {
+    auditLog({
+      event: "setup.attempt",
+      outcome: "denied",
+      actor: "anon",
+      detail: { reason: "bad_token" },
+    })
+    return NextResponse.json(
+      { error: "Invalid or missing setup token. Check the container logs." },
+      { status: 401 }
     )
   }
 
