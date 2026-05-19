@@ -13,13 +13,23 @@ const sharedClient = createClient({ url, authToken })
 
 const rateStore = new LibsqlRateLimitStore(sharedClient)
 const budgetStore = new LibsqlTokenBudgetStore(sharedClient)
-let initialized = false
+// Memoize the init promise so concurrent first-callers share one init pass.
+// Without this, N concurrent cold-start requests fire N redundant CREATE TABLE
+// statements before any has finished.
+let initPromise: Promise<void> | null = null
 
-async function ensureInit() {
-  if (initialized) return
-  await rateStore.init()
-  await budgetStore.init()
-  initialized = true
+async function ensureInit(): Promise<void> {
+  if (initPromise) return initPromise
+  initPromise = (async () => {
+    await rateStore.init()
+    await budgetStore.init()
+  })()
+  try {
+    await initPromise
+  } catch (err) {
+    initPromise = null
+    throw err
+  }
 }
 
 type SafeAiCall = ReturnType<typeof createAiSafetyMiddleware>

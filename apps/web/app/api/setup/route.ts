@@ -64,6 +64,32 @@ export async function POST(request: Request) {
       emailFrom?: string
     }
 
+  // Validate inputs cannot contain shell-breaking characters. Values are
+  // interpolated into a sourced .env file, so newlines, quotes, or backslashes
+  // could inject arbitrary `export` statements.
+  const isSafeCredential = (s: string | undefined): s is string =>
+    typeof s === "string" && /^[A-Za-z0-9._@:/+=-]+$/.test(s) && s.length <= 200
+  const candidates: Array<[string, string | undefined]> = [
+    ["googleClientId", googleClientId],
+    ["googleClientSecret", googleClientSecret],
+    ["resendApiKey", resendApiKey],
+    ["emailFrom", emailFrom],
+  ]
+  for (const [name, value] of candidates) {
+    if (value !== undefined && !isSafeCredential(value)) {
+      auditLog({
+        event: "setup.attempt",
+        outcome: "denied",
+        actor: "anon",
+        detail: { reason: "invalid_credential_chars", field: name },
+      })
+      return NextResponse.json(
+        { error: `Invalid characters in ${name}.` },
+        { status: 400 }
+      )
+    }
+  }
+
   const hasGoogle = googleClientId && googleClientSecret
   const hasResend = resendApiKey
   if (!hasGoogle && !hasResend) {
