@@ -1,55 +1,68 @@
 # Deployment
 
-This template can be deployed to a number of hosts. Pick the guide that matches
-your target — hosting cost, infra familiarity, and whether you need a real
-server are usually the deciding factors.
+Pick the deployment that matches your needs. All options keep the app's AI
+safety guardrails and APCA AAA 3.0 accessibility features intact, with caveats
+noted below.
 
-## Full application (server required)
+## Decision matrix
 
-These targets run the Next.js app with auth, API routes, and AI safety
-middleware.
+| Option                       | Best for                                                                            | Auth + DB included        | AI safety                           | Cost                           | Setup time                         |
+| ---------------------------- | ----------------------------------------------------------------------------------- | ------------------------- | ----------------------------------- | ------------------------------ | ---------------------------------- |
+| **Local Docker**             | Trying it out, small self-hosted deploys, classrooms with one teacher               | Bundled (SQLite + auth)   | Yes                                 | Free (your own hardware)       | ~5 min                             |
+| **Vercel**                   | Teams wanting hosted, no-ops, scalable                                              | Bring Turso (libSQL)      | Yes (libSQL-backed stores)          | Free hobby tier; pay for scale | ~15 min (incl. Turso)              |
+| **Netlify**                  | Same as Vercel; pick by preference                                                  | Bring Turso (libSQL)      | Yes                                 | Free starter; paid for usage   | ~15 min                            |
+| **Cloudflare Workers**       | Edge performance, global low-latency                                                | Bring Turso (libSQL)      | Yes — verify the `node_compat` flag | Very low                       | ~20 min (OpenNext setup is fiddly) |
+| **GitHub Pages (docs only)** | Publishing only the documentation. The full app does **not** run on Pages (static). | N/A                       | N/A                                 | Free                           | ~5 min                             |
+| **Apps Script + Sheets**     | Zero-infrastructure deploys, Google Workspace schools, very small use cases         | Google sign-in + Sheet DB | **Not available** (Node-only)       | Free                           | ~10 min                            |
 
-| Host           | Best for                                                                       | Guide                            |
-| -------------- | ------------------------------------------------------------------------------ | -------------------------------- |
-| **Vercel**     | First-party Next.js platform, zero-config builds, edge network                 | [vercel.md](./vercel.md)         |
-| **Netlify**    | Strong Next.js runtime via `@netlify/plugin-nextjs`, generous free tier        | [netlify.md](./netlify.md)       |
-| **Cloudflare** | Workers + Pages, global edge, low cold-start latency                           | [cloudflare.md](./cloudflare.md) |
-| **Docker**     | Self-hosted on any container runtime (Fly.io, Railway, Kubernetes, bare metal) | [docker.md](./docker.md)         |
+## Per-option guides
 
-## Static portions only
+- [Local Docker](../../README.md#run-it-in-3-steps) — quick start in the main README
+- [Vercel](./vercel.md)
+- [Netlify](./netlify.md)
+- [Cloudflare Workers](./cloudflare.md)
+- [GitHub Pages (docs)](./github-pages.md)
+- [Apps Script + Sheets](../../apps/sheets/README.md)
 
-- **[GitHub Pages](./github-pages.md)** — publish the contents of `docs/` as a
-  browsable, searchable documentation site at
-  `https://<your-org>.github.io/<your-repo>/`. Free for public repos, zero
-  servers, zero secrets. The full app does **not** run on Pages; use this
-  alongside one of the dynamic hosts above for the docs.
+## Choosing a target at a glance
 
-The GitHub Pages workflow is independent — you can enable it in addition to any
-of the dynamic deployments without conflict.
+- **Want it deployed in 10–15 minutes with previews on every PR?** → [Vercel](./vercel.md) or [Netlify](./netlify.md).
+- **Need full control, air-gapped, or running on a school's own server?** → [Local Docker](../../README.md#run-it-in-3-steps).
+- **Want global edge performance and the lowest hosting cost?** → [Cloudflare Workers](./cloudflare.md).
+- **Embedding into Google Workspace with no infra?** → [Apps Script + Sheets](../../apps/sheets/README.md) (note: no AI safety pipeline).
+- **Just publishing the docs site?** → [GitHub Pages](./github-pages.md).
 
-## Database
+## Common environment variables
 
-The template uses libSQL (Drizzle ORM + `@libsql/client`). For local development
-a SQLite file works. For production on any managed host you should use a hosted
-libSQL — most teams use [Turso](https://turso.tech/). Each host-specific guide
-above includes Turso setup steps.
+Every hosted deploy needs the same core set of variables. The canonical list
+lives in [`apps/web/.env.local.example`](../../apps/web/.env.local.example).
 
-## Environment variables
-
-Every host needs the same baseline:
-
-- `AUTH_SECRET` — random 32-byte secret for NextAuth JWT signing
-- `AUTH_URL` — the public origin of your deployed app
-- `AUTH_TRUST_HOST` — `true` when running behind a platform proxy
-- `DATABASE_URL` — libSQL connection URL (`libsql://...`)
-- `DATABASE_AUTH_TOKEN` — Turso auth token
-
-Optional, depending on which auth providers you enable:
-
-- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` — Google OAuth
-- `RESEND_API_KEY`, `EMAIL_FROM` — magic-link sign-in via Resend
+| Variable               | Purpose                                            | How to generate / obtain                                               |
+| ---------------------- | -------------------------------------------------- | ---------------------------------------------------------------------- |
+| `AUTH_SECRET`          | Signs NextAuth JWT session cookies                 | `openssl rand -base64 32`                                              |
+| `AUTH_URL`             | Canonical URL NextAuth uses for callbacks          | Your deployed origin, e.g. `https://app.example.com`                   |
+| `AUTH_TRUST_HOST`      | Trust the platform proxy's `X-Forwarded-*` headers | Set to `true` when running behind a platform proxy                     |
+| `DATABASE_URL`         | libSQL connection URL                              | Turso: `turso db show <name> --url`. Local file: `file:./dev.db`       |
+| `DATABASE_AUTH_TOKEN`  | Turso auth token (omit for local file URLs)        | `turso db tokens create <db-name>`                                     |
+| `GOOGLE_CLIENT_ID`     | Google OAuth client ID                             | Google Cloud Console → APIs & Services → Credentials → OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret                         | Same screen as `GOOGLE_CLIENT_ID`                                      |
+| `RESEND_API_KEY`       | Sends email OTPs                                   | [resend.com](https://resend.com) → API Keys                            |
+| `EMAIL_FROM`           | From-address for OTP emails                        | A verified Resend sender, e.g. `onboarding@resend.dev` while testing   |
 
 You also need a real auth backend wired into `apps/web/lib/auth.ts` (the
 template ships a placeholder).
 
-See each host guide for platform-specific notes.
+## What every host gives you
+
+- **Auth:** NextAuth v5 with JWT sessions (no database row needed for sessions).
+- **Database:** libSQL via Drizzle ORM — the same schema works against a local SQLite file or a managed Turso instance.
+- **Accessibility:** APCA AAA 3.0 contrast and a11y components run server-side.
+- **AI safety:** `@workspace/ai-safety` middleware composes rate limiting, sanitization, and PII redaction around every AI endpoint (Node runtime only).
+- **Audit logging:** Written to the same database; durable across deployments.
+
+## Caveats
+
+- **Setup wizard restart.** The first-run wizard's `process.exit(0)` only restarts the process on Docker (where the container is restarted by Docker's restart policy). On Vercel, Netlify, and Cloudflare you must set the required environment variables yourself **before** the first request — the wizard cannot self-heal those environments.
+- **State across serverless instances.** In-memory rate limits and token budgets persist via the libSQL stores. Configure `DATABASE_URL` to a hosted libSQL (Turso) so these counters are shared across serverless invocations rather than per-instance.
+- **GitHub Pages is docs only.** Pages serves static HTML; the Next.js app, auth, and API routes do **not** run there. Use it to publish `/docs` only. The GitHub Pages workflow is independent — you can enable it in addition to any of the dynamic deployments without conflict.
+- **Apps Script companion is separate.** The code under `apps/sheets/` is a different codebase from the Next.js app. It does not include the `@workspace/ai-safety` guardrails — content moderation, rate limiting, and PII redaction must be implemented separately if you need them there.
