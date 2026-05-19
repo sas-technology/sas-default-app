@@ -1,0 +1,26 @@
+# Netlify build configuration for the Next.js app inside this pnpm monorepo.
+#
+# Netlify's recommended monorepo pattern keeps `base` at the repo root so the
+# pnpm workspace is fully visible, and points `publish` at the app's `.next`
+# directory. The build command runs from the repo root and then builds the
+# `web` workspace via Turbo.
+#
+# Docs: https://docs.netlify.com/build/configure-builds/monorepos/
+
+[build]
+  base = "."
+  command = "pnpm install --frozen-lockfile && pnpm --filter web build"
+  publish = "apps/web/.next"
+
+[build.environment]
+  # Pin the Node version used by Netlify's build image.
+  NODE_VERSION = "22"
+  # Enable pnpm via Corepack (matches local + CI).
+  NPM_FLAGS = "--version"
+  # Quiet Next.js telemetry pings during build.
+  NEXT_TELEMETRY_DISABLED = "1"
+
+# The official Netlify Next.js runtime. Handles SSR, route handlers,
+# middleware, ISR, and Image Optimization with no extra config.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
