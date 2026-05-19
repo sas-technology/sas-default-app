@@ -474,3 +474,10 @@ them.
 - Content safety is keyword-based; production deployments should wire up an
   external moderator (e.g., OpenAI moderation, Azure Content Safety) via the
   `externalModerator` config hook.
+
+## See also
+
+- [Architecture](./architecture.md) — where the AI safety pipeline fits in the request flow
+- [Coding Conventions](./coding-conventions.md#ai-safety) — guidelines for using `createAiSafetyMiddleware()` in API routes
+- [Getting Started](./getting-started.md) — local development setup
+- [Project Overview](./overview.md) — what the template is and who it's for

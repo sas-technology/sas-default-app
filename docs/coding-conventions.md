@@ -75,3 +75,12 @@ const result = validateContrast("#333333", "#ffffff", "bodyText")
 - Configure appropriate rate limits per route
 - Review PII redaction settings for your use case
 - Content safety patterns are a baseline - add external moderation APIs for production
+
+See [docs/ai-safety.md](./ai-safety.md) for the full reference: each guardrail's defaults, configuration, and known limitations.
+
+## See also
+
+- [Getting Started](./getting-started.md) — local development setup
+- [Architecture](./architecture.md) — monorepo layout and auth flow
+- [AI Safety Guardrails](./ai-safety.md) — canonical reference for `@workspace/ai-safety`
+- [Project Overview](./overview.md) — what the template is and who it's for
