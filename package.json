@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@secretlint/secretlint-rule-preset-recommend": "^13.0.2",
-    "@vitest/coverage-v8": "^4.1.6",
+    "@vitest/coverage-v8": "^4.1.7",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "husky": "^9.1.7",
@@ -45,7 +45,7 @@
     "tsc-files": "^1.1.4",
     "turbo": "^2.9.14",
     "typescript": "6.0.3",
-    "vitest": "^4.1.6"
+    "vitest": "^4.1.7"
   },
   "packageManager": "pnpm@9.15.4",
   "engines": {
