@@ -49,15 +49,15 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.0",
-    "@turbo/gen": "^2.9.14",
-    "@types/node": "^25.9.0",
+    "@tailwindcss/postcss": "^4.3.2",
+    "@turbo/gen": "^2.10.1",
+    "@types/node": "^26.0.1",
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
-    "eslint": "^10.4.0",
-    "tailwindcss": "^4.3.0",
+    "eslint": "^10.6.0",
+    "tailwindcss": "^4.3.2",
     "typescript": "^6.0.3"
   }
 }
