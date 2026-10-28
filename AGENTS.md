@@ -57,18 +57,18 @@ request to create them and confirm in the PR description.
 
 ## 3. Commands you'll use most
 
-| Command                       | What it does                                            |
-| ----------------------------- | ------------------------------------------------------- |
-| `pnpm dev`                    | Start the dev server (Turbopack) on `localhost:11000`   |
-| `pnpm build`                  | Build every workspace through Turborepo                 |
-| `pnpm typecheck`              | Run `tsc --noEmit` across the monorepo                  |
-| `pnpm lint`                   | ESLint across all workspaces                            |
-| `pnpm lint:md`                | `markdownlint-cli2` across all Markdown                 |
-| `pnpm format`                 | Prettier write across all workspaces                    |
-| `pnpm format:check`           | Prettier check (no writes) — CI-equivalent              |
-| `pnpm test`                   | Vitest in every workspace that has tests                |
-| `pnpm --filter <name> <cmd>`  | Scope a command to one workspace                        |
-| `./start.sh`                  | One-shot user-facing launcher (Docker)                  |
+| Command                      | What it does                                          |
+| ---------------------------- | ----------------------------------------------------- |
+| `pnpm dev`                   | Start the dev server (Turbopack) on `localhost:11000` |
+| `pnpm build`                 | Build every workspace through Turborepo               |
+| `pnpm typecheck`             | Run `tsc --noEmit` across the monorepo                |
+| `pnpm lint`                  | ESLint across all workspaces                          |
+| `pnpm lint:md`               | `markdownlint-cli2` across all Markdown               |
+| `pnpm format`                | Prettier write across all workspaces                  |
+| `pnpm format:check`          | Prettier check (no writes) — CI-equivalent            |
+| `pnpm test`                  | Vitest in every workspace that has tests              |
+| `pnpm --filter <name> <cmd>` | Scope a command to one workspace                      |
+| `./start.sh`                 | One-shot user-facing launcher (Docker)                |
 
 **Gotcha:** the web app's package name is **`sas-default-app-web`**, not
 `web`. `pnpm --filter web ...` matches nothing. Use
@@ -210,9 +210,7 @@ export default async function YourFeature() {
   const session = await requireAuth()
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-semibold">
-        Hello, {session.user?.name}
-      </h1>
+      <h1 className="text-2xl font-semibold">Hello, {session.user?.name}</h1>
     </div>
   )
 }
@@ -332,3 +330,9 @@ workflow does not invoke them.
 
 When in doubt, prefer the wording in this file and in `CLAUDE.md` over older
 docs. If you find a discrepancy, fix it in the same PR and call it out.
+
+## Branching
+
+Open pull requests against `staging`. `main` only takes releases from
+`staging`, so a PR opened against `main` will be refused by the org
+release-version check. See `sas-technology/.github` for the full flow.
