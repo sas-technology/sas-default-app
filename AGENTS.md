@@ -332,3 +332,9 @@ workflow does not invoke them.
 
 When in doubt, prefer the wording in this file and in `CLAUDE.md` over older
 docs. If you find a discrepancy, fix it in the same PR and call it out.
+
+## Branching
+
+Open pull requests against `staging`. `main` only takes releases from
+`staging`, so a PR opened against `main` will be refused by the org
+release-version check. See `sas-technology/.github` for the full flow.
