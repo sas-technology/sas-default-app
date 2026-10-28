@@ -1,6 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: npm
+    target-branch: "staging"
     directory: "/"
     schedule:
       interval: weekly
@@ -11,6 +12,7 @@ updates:
       production:
         dependency-type: production
   - package-ecosystem: github-actions
+    target-branch: "staging"
     directory: "/"
     schedule:
       interval: weekly
